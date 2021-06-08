@@ -3,27 +3,24 @@ package com.zhen.MySillyDesktopCatGame.Controller;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+import com.zhen.MySillyDesktopCatGame.View.Frame;
 import com.zhen.MySillyDesktopCatGame.View.Window;
 
 public class MainController implements Runnable{
 
     private boolean programRunning = false;
     private Thread thread;
-    private ViewController viewController;
+    private Frame frame;
 
 
 
     public MainController() {
         GameState gameState = new GameState(GameStateType.MENU);
         GameWindow gameWindow = new GameWindow();
-        Window window = new Window(gameWindow);
-        window.createBufferStrategy(3);
-        viewController = new ViewController(gameState, gameWindow, window);
-        viewController.createFrame();
-        window.subscribe(viewController);
-        viewController.run();
+        ViewController viewController = new ViewController(gameState,gameWindow);
+        frame = new Frame(gameWindow,gameState,viewController);
 
-
+        start();
     }
 
 
@@ -79,6 +76,6 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-        viewController.update();
+        frame.repaint();
     }
 }
