@@ -1,5 +1,8 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Model.GameState;
+import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
+import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.Window;
 
 public class MainController implements Runnable{
@@ -11,8 +14,16 @@ public class MainController implements Runnable{
 
 
     public MainController() {
-        viewController = new ViewController();
-        start();
+        GameState gameState = new GameState(GameStateType.MENU);
+        GameWindow gameWindow = new GameWindow();
+        Window window = new Window(gameWindow);
+        window.createBufferStrategy(3);
+        viewController = new ViewController(gameState, gameWindow, window);
+        viewController.createFrame();
+        window.subscribe(viewController);
+        viewController.run();
+
+
     }
 
 
@@ -68,6 +79,6 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-        viewController.run();
+        viewController.update();
     }
 }

@@ -1,43 +1,66 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
+import com.zhen.MySillyDesktopCatGame.Controller.ViewController;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
+import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 
 public class Window extends Canvas {
 
+    private ViewController viewController;
+    private JFrame frame;
+    private Menu menu;
+
+
+
     public Window(GameWindow gameWindow) {
-        Dimension size = new Dimension(gameWindow.getGameWindowWidth(), gameWindow.getGameWindowHeight());
-        setPreferredSize(size);
-        setMaximumSize(size);
-        setMaximumSize(size);
+        frame = new JFrame();
+        frame.add(this);
+        frame.setSize(gameWindow.getGameWindowWidth(),gameWindow.getGameWindowHeight());
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JButton button = new JButton();
+        button.setBounds(20,20,20,20);
+        frame.add(this);
+
+
     }
 
-    public void createFrame(Window window)
+    public void createFrame()
     {
-        JFrame frame = new JFrame();
-        frame.add(window);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+
     }
 
-    public void render(Window window){
+    public void subscribe(ViewController viewController)
+    {
+        this.viewController = viewController;
+    }
+
+    public void update(Window window, GameStateType gameStateType)
+    {
+        render(window, gameStateType);
+    }
+
+    public void render(Window window, GameStateType gameStateType){
         BufferStrategy bs = getBufferStrategy();
         if(bs == null)
         {
-            window.createBufferStrategy(3);
+            this.createBufferStrategy(3);
             return;
         }
         Graphics g = bs.getDrawGraphics();
 
-        g.setColor(new Color(210,210,210));
-        g.fillRect(0,0,getWidth(),getHeight());
+        if(gameStateType.equals(GameStateType.MENU))
+        {
+            JButton jButton = new JButton();
+            jButton.setBounds(20,20,20,20);
+            frame.add(jButton);
+        }
 
+        frame.setVisible(true);
         g.dispose();
         bs.show();
     }
