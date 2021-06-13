@@ -29,4 +29,20 @@ public class Cat {
     public void setHappiness(int happiness) {
         this.happiness = happiness;
     }
+
+    public CatStateType getCatStateType() {
+        return catStateType;
+    }
+
+    public void setCatStateType(CatStateType catStateType) {
+        this.catStateType = catStateType;
+    }
+
+    public int getCatLastUpdated() {
+        return catLastUpdated;
+    }
+
+    public void setCatLastUpdated(int catLastUpdated) {
+        this.catLastUpdated = catLastUpdated;
+    }
 }

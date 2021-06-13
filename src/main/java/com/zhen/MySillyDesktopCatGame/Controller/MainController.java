@@ -4,6 +4,8 @@ import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.Frame;
+import com.zhen.MySillyDesktopCatGame.View.Sprite;
+import com.zhen.MySillyDesktopCatGame.View.SpriteSheet;
 import com.zhen.MySillyDesktopCatGame.View.Window;
 
 public class MainController implements Runnable{
@@ -19,8 +21,24 @@ public class MainController implements Runnable{
         GameWindow gameWindow = new GameWindow();
         ViewController viewController = new ViewController(gameState,gameWindow);
         frame = new Frame(gameWindow,gameState,viewController);
+        //TODO read saved data and check cat stat
+
+//        CatController catController = new CatController();
+
 
         start();
+    }
+
+    private void initView()
+    {
+        SpriteController spriteController = new SpriteController();
+        SpriteSheet catIdleSpriteSheet = new SpriteSheet("CatSpriteSheet.png",1,4);
+        SpriteSheet catEatSpriteSheet = new SpriteSheet("CatSpriteSheet.png",2,7);
+        Sprite[] catIdleSprite = new Sprite[4];
+        Sprite[] catEatSprite = new Sprite[7];
+        spriteController.fillSpriteList(catIdleSpriteSheet,catIdleSprite);
+        spriteController.fillSpriteList(catEatSpriteSheet,catEatSprite);
+
     }
 
 
