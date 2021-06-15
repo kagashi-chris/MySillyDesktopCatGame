@@ -1,13 +1,9 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
-import com.zhen.MySillyDesktopCatGame.View.Frame;
-import com.zhen.MySillyDesktopCatGame.View.Window;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ViewController{
 
@@ -32,5 +28,6 @@ public class ViewController{
             System.exit(1);
         }
     }
+
 
 }

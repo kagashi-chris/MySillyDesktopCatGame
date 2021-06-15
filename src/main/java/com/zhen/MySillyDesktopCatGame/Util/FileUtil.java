@@ -1,6 +1,8 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
+import com.zhen.MySillyDesktopCatGame.View.Sprite;
+import com.zhen.MySillyDesktopCatGame.View.SpriteSheet;
 
 import java.io.*;
 import java.net.URI;
@@ -13,6 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtil {
+
+    public static void fillSpriteList(SpriteSheet spriteSheet, Sprite[] sprite, int width, int height)
+    {
+        for(int i = 0; i < sprite.length; i++)
+        {
+            sprite[i] = new Sprite(spriteSheet, i,1, width, height);
+        }
+    }
 
     public static String generateCatString(Cat cat)
     {
