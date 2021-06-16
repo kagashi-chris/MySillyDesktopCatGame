@@ -33,7 +33,10 @@ public class Game extends JPanel implements ActionListener {
     private int CAT_PIXEL_WIDTH = 32;
     private int CAT_PIXEL_HEIGHT = 32;
     private int CAT_IDLE_FRAMES = 4;
+    private int CAT_EAT_FRAMES = 7;
     private boolean facingRight = true;
+
+    private int index = 0;
 
     Timer timer = new Timer(1000,this);
     int time = 0;
@@ -118,7 +121,20 @@ public class Game extends JPanel implements ActionListener {
 
     public void initCatEat()
     {
-
+        catEatSprite = new Image[CAT_EAT_FRAMES];
+        if(catEatSpriteSheet == null)
+        {
+            try {
+                catEatSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatEat.png"));
+                for(int i = 0; i < CAT_EAT_FRAMES; i++)
+                {
+                    Image tempImage = catEatSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+                    catEatSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public void drawCat()
     {
@@ -146,7 +162,7 @@ public class Game extends JPanel implements ActionListener {
 
     }
 
-    //Actions performed whenever someone clicks on a button
+    //Actions performed whenever someone clicks on a button or whenever timer calls it every second
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == menuButton)
@@ -163,6 +179,8 @@ public class Game extends JPanel implements ActionListener {
         if(e.getSource() == timer)
         {
             time++;
+
+            //this is the logic for displaying cat idle animation
             if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
             {
                 if((int)(Math.random()*10)+1 == 1 )
@@ -193,8 +211,19 @@ public class Game extends JPanel implements ActionListener {
                     catLabel.setIcon(new ImageIcon(catIdleSprite[3]));
                 }
             }
-
-
+            else if(catController.getCat().getCatStateType().equals(CatStateType.EATING))
+            {
+                //disable feed button so it can't be spam clicked and re-enable it after the animation ends
+                feedButton.setEnabled(false);
+                catLabel.setIcon(new ImageIcon(catEatSprite[index]));
+                index++;
+                if(index >= CAT_EAT_FRAMES)
+                {
+                    index = 0;
+                    catController.setCatState(CatStateType.IDLE);
+                    feedButton.setEnabled(true);
+                }
+            }
 
         }
     }
