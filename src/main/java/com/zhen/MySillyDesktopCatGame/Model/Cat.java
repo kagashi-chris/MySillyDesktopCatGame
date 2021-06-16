@@ -11,6 +11,7 @@ public class Cat {
     private CatStateType catStateType;
     private LocalDateTime catLastUpdated;
 
+
     public Cat() {
         fullness = 50;
         happiness = 50;

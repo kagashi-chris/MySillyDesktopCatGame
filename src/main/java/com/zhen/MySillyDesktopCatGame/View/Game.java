@@ -12,21 +12,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Game extends JPanel implements ActionListener {
 
     private JButton menuButton;
     private JButton feedButton;
     private JButton playButton;
+
+    //TODO REMOVE WHEN DONE
+    private JButton debugHungryButton;
+
     private JLabel catLabel;
     private ViewController viewController;
     private CatController catController;
 
     private BufferedImage catIdleSpriteSheet;
     private BufferedImage catEatSpriteSheet;
+    private BufferedImage catDyingSpriteSheet;
+    private BufferedImage catDeadSpriteSheet;
+    private BufferedImage heartSpriteSheet;
 
     private Image[] catIdleSprite;
     private Image[] catEatSprite;
+    private Image[] catDyingSprite;
+    private Image[] catDeadSprite;
+    private Image[] heartSprite;
+
+    private java.util.List<JButton> buttonList = new ArrayList<>();
 
     private int CAT_DISPLAY_IMAGE_WIDTH = 256;
     private int CAT_DISPLAY_IMAGE_HEIGHT = 256;
@@ -34,6 +47,7 @@ public class Game extends JPanel implements ActionListener {
     private int CAT_PIXEL_HEIGHT = 32;
     private int CAT_IDLE_FRAMES = 4;
     private int CAT_EAT_FRAMES = 7;
+    private int CAT_DYING_FRAMES = 2;
     private boolean facingRight = true;
 
     private int index = 0;
@@ -62,12 +76,20 @@ public class Game extends JPanel implements ActionListener {
         playButton.setBounds(20,100, 100,20);
         playButton.addActionListener(this);
 
+        //TODO REMOVE WHEN DONE
+        debugHungryButton = new JButton("Debug Hungry");
+        debugHungryButton.setBounds(20,140, 100,20);
+        debugHungryButton.addActionListener(this);
 
+        buttonList.add(playButton);
+        buttonList.add(feedButton);
+        buttonList.add(debugHungryButton);
+        buttonList.add(menuButton);
         //draw cat lazy loads the sprite base on CatStateType
         drawCat();
         catLabel = new JLabel();
         //display cat decides what gets shown in the label base on CatStateType
-        displayCat(catLabel);
+        initCatDisplay(catLabel);
         catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
 
         timer.start();
@@ -80,17 +102,44 @@ public class Game extends JPanel implements ActionListener {
         this.add(menuButton);
         this.add(feedButton);
         this.add(playButton);
+        this.add(debugHungryButton);
         this.add(catLabel);
         this.setLayout(null);
 
         Graphics2D g2D = (Graphics2D) g;
     }
 
-    public void displayCat(JLabel label)
+    public void initCatDisplay(JLabel label)
     {
         if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
         {
-            label.setIcon(new ImageIcon(catIdleSprite[1]));
+            label.setIcon(new ImageIcon(catIdleSprite[0]));
+        }
+        else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
+        {
+            label.setIcon(new ImageIcon(catDyingSprite[0]));
+        }
+        else if(catController.getCat().getCatStateType().equals(CatStateType.DEAD))
+        {
+            label.setIcon(new ImageIcon(catDeadSprite[0]));
+        }
+    }
+
+    //disable buttons during animations to stop users from spam clicking button and potentially cause a bug
+    public void disableButtons()
+    {
+        for(JButton button: buttonList)
+        {
+            button.setEnabled(false);
+        }
+    }
+
+    //re-enable buttons after animation end
+    public void enableButtons()
+    {
+        for(JButton button: buttonList)
+        {
+            button.setEnabled(true);
         }
     }
 
@@ -136,6 +185,24 @@ public class Game extends JPanel implements ActionListener {
             }
         }
     }
+
+    public void initDyingCat()
+    {
+        catDyingSprite = new Image[CAT_DYING_FRAMES];
+        if(catDyingSpriteSheet == null)
+        {
+            try {
+                catDyingSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatDying.png"));
+                for(int i = 0; i < CAT_DYING_FRAMES; i++)
+                {
+                    Image tempImage = catDyingSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+                    catDyingSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public void drawCat()
     {
         System.out.println("running draw cat");
@@ -154,6 +221,13 @@ public class Game extends JPanel implements ActionListener {
                 initCatEat();
             }
         }
+        else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
+        {
+            if(catDyingSprite == null)
+            {
+                initDyingCat();
+            }
+        }
     }
 
     public Image scaleUpImage(int scaleWidth, int scaleHeight, Image image)
@@ -165,6 +239,17 @@ public class Game extends JPanel implements ActionListener {
     //Actions performed whenever someone clicks on a button or whenever timer calls it every second
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        //TODO REMOVE WHEN DONE
+        if(e.getSource() == debugHungryButton)
+        {
+            catController.hungryCat();
+            if(catController.isHungry())
+            {
+                catController.setCatState(CatStateType.DYING);
+            }
+            drawCat();
+        }
         if(e.getSource() == menuButton)
         {
             viewController.setGameState(GameStateType.MENU);
@@ -181,6 +266,7 @@ public class Game extends JPanel implements ActionListener {
             time++;
 
             //this is the logic for displaying cat idle animation
+            //Math random to decide when the direct he face changes
             if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
             {
                 if((int)(Math.random()*10)+1 == 1 )
@@ -214,15 +300,27 @@ public class Game extends JPanel implements ActionListener {
             else if(catController.getCat().getCatStateType().equals(CatStateType.EATING))
             {
                 //disable feed button so it can't be spam clicked and re-enable it after the animation ends
-                feedButton.setEnabled(false);
+                disableButtons();
                 catLabel.setIcon(new ImageIcon(catEatSprite[index]));
                 index++;
                 if(index >= CAT_EAT_FRAMES)
                 {
                     index = 0;
                     catController.setCatState(CatStateType.IDLE);
-                    feedButton.setEnabled(true);
+                    enableButtons();
                 }
+            }
+            else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
+            {
+                if(time % 2 == 0)
+                {
+                    catLabel.setIcon(new ImageIcon(catDyingSprite[0]));
+                }
+                else
+                {
+                    catLabel.setIcon(new ImageIcon(catDyingSprite[1]));
+                }
+
             }
 
         }

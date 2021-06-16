@@ -57,6 +57,21 @@ public class CatController {
         cat.setFullness(cat.getFullness()+30);
     }
 
+    //TODO debug get rid after
+    public void hungryCat()
+    {
+        cat.setFullness(cat.getFullness()-30);
+    }
+
+    public boolean isHungry()
+    {
+        if(cat.getFullness()<=30)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public Cat getCat()
     {
         return this.cat;

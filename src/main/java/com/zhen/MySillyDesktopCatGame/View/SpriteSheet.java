@@ -20,7 +20,7 @@ public class SpriteSheet {
         }
     }
 
-    public BufferedImage getSprite(int row, int column, int width, int height)
+    public BufferedImage getSprite(int row, int column)
     {
         int spriteWidth = sheet.getWidth()/spriteSheetColumns;
         int spriteHeight = sheet.getHeight()/spriteSheetRows;
