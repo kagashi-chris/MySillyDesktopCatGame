@@ -11,10 +11,11 @@ public class Cat {
     private CatStateType catStateType;
     private LocalDateTime catLastUpdated;
 
-
+    //cat fullness goes up to 100000 and starts at 50000. The reason for this is because I wanted the hunger to
+    //tick down by one every second.
     public Cat() {
-        fullness = 50;
-        happiness = 50;
+        fullness = 50000;
+        happiness = 50000;
         catStateType = CatStateType.IDLE;
         catLastUpdated = LocalDateTime.now();
     }

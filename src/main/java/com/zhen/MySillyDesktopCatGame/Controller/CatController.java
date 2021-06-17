@@ -27,7 +27,7 @@ public class CatController {
         {
             setCatState(CatStateType.DEAD);
         }
-        else if(currentHappiness < 30 || currentHunger < 30)
+        else if(currentHappiness < 30000 || currentHunger < 30000)
         {
             setCatState(CatStateType.DYING);
         }
@@ -54,22 +54,36 @@ public class CatController {
 
     public void feedCat()
     {
-        cat.setFullness(cat.getFullness()+30);
+        cat.setFullness(cat.getFullness()+30000);
+    }
+
+    //cat loses 1point of hunger every second
+    public void catDecayHunger()
+    {
+        cat.setFullness(cat.getFullness()-1);
+        System.out.println("Current Hunger Value After Decay: " + cat.getFullness());
+    }
+
+    public void updateCatState()
+    {
+        if(cat.getFullness()>30000)
+        {
+            setCatState(CatStateType.IDLE);
+        }
+        else if(cat.getFullness()<=30000 && cat.getFullness() > 0)
+        {
+            setCatState(CatStateType.DYING);
+        }
+        else if(cat.getFullness()<=0)
+        {
+            setCatState(CatStateType.DEAD);
+        }
     }
 
     //TODO debug get rid after
     public void hungryCat()
     {
-        cat.setFullness(cat.getFullness()-30);
-    }
-
-    public boolean isHungry()
-    {
-        if(cat.getFullness()<=30)
-        {
-            return true;
-        }
-        return false;
+        cat.setFullness(cat.getFullness()-30000);
     }
 
     public Cat getCat()
