@@ -25,8 +25,6 @@ public class MainController implements Runnable{
         ViewController viewController = new ViewController(gameState,gameWindow);
         frame = new Frame(gameWindow,gameState,viewController,catController);
 
-        initView();
-
         start();
     }
 
@@ -35,15 +33,6 @@ public class MainController implements Runnable{
     {
         cat = FileUtil.csvReader("Cat.csv");
     }
-
-    private void initView()
-    {
-//        SpriteSheet catIdleSpriteSheet = new SpriteSheet("CatSpriteSheet.png",1,4);
-//        Sprite[] catIdleSprite = new Sprite[4];
-//        FileUtil.fillSpriteList(catIdleSpriteSheet,catIdleSprite);
-
-    }
-
 
     private synchronized void start()
     {

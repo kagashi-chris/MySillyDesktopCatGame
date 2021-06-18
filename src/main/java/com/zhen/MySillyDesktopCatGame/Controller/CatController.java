@@ -66,11 +66,11 @@ public class CatController {
 
     public void updateCatState()
     {
-        if(cat.getFullness()>30000)
+        if(cat.getFullness()>30000 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
             setCatState(CatStateType.IDLE);
         }
-        else if(cat.getFullness()<=30000 && cat.getFullness() > 0)
+        else if(cat.getFullness()<=30000 && cat.getFullness() > 0 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
             setCatState(CatStateType.DYING);
         }

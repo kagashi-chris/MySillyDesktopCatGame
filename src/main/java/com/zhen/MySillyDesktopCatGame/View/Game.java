@@ -76,7 +76,7 @@ public class Game extends JPanel implements ActionListener {
         playButton.addActionListener(this);
 
         //TODO REMOVE WHEN DONE
-        debugHungryButton = new JButton("Debug Hungry");
+        debugHungryButton = new JButton("Hungry");
         debugHungryButton.setBounds(20,140, 100,20);
         debugHungryButton.addActionListener(this);
 
@@ -262,7 +262,6 @@ public class Game extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e)
     {
-
 
         //TODO REMOVE WHEN DONE
         if(e.getSource() == debugHungryButton)
