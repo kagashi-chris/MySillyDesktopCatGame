@@ -1,38 +1,46 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
-import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
-import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+import com.zhen.MySillyDesktopCatGame.Type.*;
 import com.zhen.MySillyDesktopCatGame.Util.FileUtil;
-import com.zhen.MySillyDesktopCatGame.View.Frame;
-import com.zhen.MySillyDesktopCatGame.View.Sprite;
-import com.zhen.MySillyDesktopCatGame.View.SpriteSheet;
+import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
 
 public class MainController implements Runnable{
 
     private boolean programRunning = false;
     private Thread thread;
-    private Frame frame;
 
-    private Cat cat;
+    private MainWindowView mainWindowView;
+
+    private SillyCatGameController sillyCatGameController;
+    private MenuController menuController;
+    private MinigameController minigameController;
+    private AnimationController animationController;
+
+    private GameState gameState;
 
     public MainController() {
-        GameState gameState = new GameState(GameStateType.MENU);
+        gameState = new GameState(GameStateType.MENU);
         GameWindow gameWindow = new GameWindow();
-        initGameState();
-        CatController catController = new CatController(cat);
-        ViewController viewController = new ViewController(gameState,gameWindow);
-        frame = new Frame(gameWindow,gameState,viewController,catController);
+
+        menuController = new MenuController(this);
+        sillyCatGameController = new SillyCatGameController(this);
+        minigameController = new MinigameController(this);
+        animationController = new AnimationController(this);
+
+
+        mainWindowView = new MainWindowView(this);
 
         start();
     }
 
     //gets the csv data and converts it into a cat object
-    private void initGameState()
-    {
-        cat = FileUtil.csvReader("Cat.csv");
-    }
+//    private void initGameFile()
+//    {
+//        cat = FileUtil.csvReader("Cat.csv");
+//    }
+
 
     private synchronized void start()
     {
@@ -86,6 +94,48 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-        frame.repaint();
+        mainWindowView.mainViewLoop();
+    }
+
+    public void performAction(Action action)
+    {
+        if (action instanceof SwitchScreenToAction)
+        {
+            handleSwitchScreenTo((SwitchScreenToAction)action);
+        }
+
+    }
+
+    private void handleSwitchScreenTo(SwitchScreenToAction action)
+    {
+        gameState.setGameStateType(action.getGameStateType());
+    }
+
+    protected GameState getGameState()
+    {
+        return gameState;
+    }
+
+    public void setGameState(GameStateType gameStateType)
+    {
+        gameState.setGameStateType(gameStateType);
+        System.out.println("Game state set to: " + gameStateType.toString());
+        if(gameStateType.equals(GameStateType.EXIT))
+        {
+            System.exit(1);
+        }
+    }
+
+    public MenuController getMenuController() {
+        return menuController;
+    }
+
+
+    public MinigameController getMinigameController() {
+        return minigameController;
+    }
+
+    public SillyCatGameController getSillyCatGameController() {
+        return sillyCatGameController;
     }
 }

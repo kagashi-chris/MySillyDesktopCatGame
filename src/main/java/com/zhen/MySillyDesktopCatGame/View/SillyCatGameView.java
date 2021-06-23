@@ -1,7 +1,9 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
-import com.zhen.MySillyDesktopCatGame.Controller.CatController;
-import com.zhen.MySillyDesktopCatGame.Controller.ViewController;
+import com.zhen.MySillyDesktopCatGame.Controller.MainController;
+import com.zhen.MySillyDesktopCatGame.Controller.SillyCatGameController;
+import com.zhen.MySillyDesktopCatGame.Model.Cat;
+import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
@@ -14,7 +16,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Game extends JPanel implements ActionListener {
+public class SillyCatGameView extends JPanel implements ActionListener {
+
+    private static SillyCatGameView sillyCatGameView;
 
     private JButton menuButton;
     private JButton feedButton;
@@ -25,8 +29,8 @@ public class Game extends JPanel implements ActionListener {
     private java.util.List<JButton> buttonList = new ArrayList<>();
 
     private JLabel catLabel;
-    private ViewController viewController;
-    private CatController catController;
+    private MainController mainController;
+    private static SillyCatGameView instance;
 
     private BufferedImage catIdleSpriteSheet;
     private BufferedImage catEatSpriteSheet;
@@ -40,10 +44,6 @@ public class Game extends JPanel implements ActionListener {
     private Image[] catDeadSprite;
     private Image[] heartSprite;
 
-    private final int CAT_DISPLAY_IMAGE_WIDTH = 256;
-    private final int CAT_DISPLAY_IMAGE_HEIGHT = 256;
-    private final int CAT_PIXEL_WIDTH = 32;
-    private final int CAT_PIXEL_HEIGHT = 32;
     private final int CAT_IDLE_FRAMES = 4;
     private final int CAT_EAT_FRAMES = 7;
     private final int CAT_DYING_FRAMES = 2;
@@ -54,14 +54,16 @@ public class Game extends JPanel implements ActionListener {
     Timer timer = new Timer(1000,this);
     int time = 0;
 
+
+
     //this class manages the display of Game elements within the frame. it constructs the buttons/graphics.
     //Action listeners are placed on the buttons so view controller and/or cat controller can be notifed when
     //certain buttons are pressed. The animation of the cat changes on a timer. Every one second the timer will call
     //the action listener and check the CatStateType again. If it remains the same then it moves onto the next frame
     //of the animation, else it resets the frame count back to 0 and play the request animation.
-    public Game(ViewController viewController, CatController catController) {
-        this.viewController = viewController;
-        this.catController = catController;
+    private SillyCatGameView(MainController mainController)
+    {
+        this.mainController = mainController;
 
         menuButton = new JButton("Menu");
         menuButton.setBounds(20,20, 100,20);
@@ -88,15 +90,23 @@ public class Game extends JPanel implements ActionListener {
         drawCat();
         catLabel = new JLabel();
         //display cat decides what gets shown in the label base on CatStateType
-        initCatDisplay(catLabel);
         catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
-
+        initView();
         timer.start();
-
     }
 
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
+
+    public static synchronized SillyCatGameView getInstance(MainController mainController)
+    {
+        if(instance == null)
+        {
+            instance = new SillyCatGameView(mainController);
+        }
+        return instance;
+    }
+
+    private void initView()
+    {
         this.setBackground(Color.lightGray);
         this.add(menuButton);
         this.add(feedButton);
@@ -104,146 +114,107 @@ public class Game extends JPanel implements ActionListener {
         this.add(debugHungryButton);
         this.add(catLabel);
         this.setLayout(null);
-
-        Graphics2D g2D = (Graphics2D) g;
     }
-
-    public void initCatDisplay(JLabel label)
-    {
-        if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
-        {
-            label.setIcon(new ImageIcon(catIdleSprite[0]));
-        }
-        else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
-        {
-            label.setIcon(new ImageIcon(catDyingSprite[0]));
-        }
-        else if(catController.getCat().getCatStateType().equals(CatStateType.DEAD))
-        {
-            label.setIcon(new ImageIcon(catDeadSprite[0]));
-        }
-    }
-
-    //disable buttons during animations to stop users from spam clicking button and potentially cause a bug
-    public void disableButtons()
-    {
-        for(JButton button: buttonList)
-        {
-            button.setEnabled(false);
-        }
-    }
-
-    //re-enable buttons after animation end
-    public void enableButtons()
-    {
-        for(JButton button: buttonList)
-        {
-            button.setEnabled(true);
-        }
-    }
-
     //lazy load the cat sprite and save all the animation to catIdleSprite list
     //There are currently 4 Sprite images each being 32 x 32 pixels
     //used a for loop to get the sub images inside the sprite sheet
     //tempImage uses scaleUpImage method and scales up the 32 x 32 pixel art to appear larger on screen
-
-    public void initCatIdle()
-    {
-        catIdleSprite = new Image[CAT_IDLE_FRAMES];
-        if(catIdleSpriteSheet == null)
-        {
-            try {
-                catIdleSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatIdle.png"));
-                for(int i = 0; i < CAT_IDLE_FRAMES; i++)
-                {
-                    Image tempImage = catIdleSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
-                    catIdleSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void initCatIdle()
+//    {
+//        catIdleSprite = new Image[CAT_IDLE_FRAMES];
+//        if(catIdleSpriteSheet == null)
+//        {
+//            try {
+//                catIdleSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatIdle.png"));
+//                for(int i = 0; i < CAT_IDLE_FRAMES; i++)
+//                {
+//                    Image tempImage = catIdleSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+//                    catIdleSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+//                }
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
     //lazy load the cat sprite and save all the animation to catEatSprite
-
-    public void initCatEat()
-    {
-        catEatSprite = new Image[CAT_EAT_FRAMES];
-        if(catEatSpriteSheet == null)
-        {
-            try {
-                catEatSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatEat.png"));
-                for(int i = 0; i < CAT_EAT_FRAMES; i++)
-                {
-                    Image tempImage = catEatSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
-                    catEatSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void initDeadCat()
-    {
-        catDeadSprite = new Image[CAT_DEAD_FRAMES];
-        if(catDeadSpriteSheet == null)
-        {
-            try {
-                catDeadSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatDead.png"));
-                for(int i = 0; i < CAT_DEAD_FRAMES; i++)
-                {
-                    Image tempImage = catDeadSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
-                    catDeadSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void initDyingCat()
-    {
-        catDyingSprite = new Image[CAT_DYING_FRAMES];
-        if(catDyingSpriteSheet == null)
-        {
-            try {
-                catDyingSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatDying.png"));
-                for(int i = 0; i < CAT_DYING_FRAMES; i++)
-                {
-                    Image tempImage = catDyingSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
-                    catDyingSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void initCatEat()
+//    {
+//        catEatSprite = new Image[CAT_EAT_FRAMES];
+//        if(catEatSpriteSheet == null)
+//        {
+//            try {
+//                catEatSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatEat.png"));
+//                for(int i = 0; i < CAT_EAT_FRAMES; i++)
+//                {
+//                    Image tempImage = catEatSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+//                    catEatSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
+//    public void initDeadCat()
+//    {
+//        catDeadSprite = new Image[CAT_DEAD_FRAMES];
+//        if(catDeadSpriteSheet == null)
+//        {
+//            try {
+//                catDeadSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatDead.png"));
+//                for(int i = 0; i < CAT_DEAD_FRAMES; i++)
+//                {
+//                    Image tempImage = catDeadSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+//                    catDeadSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
+//    public void initDyingCat()
+//    {
+//        catDyingSprite = new Image[CAT_DYING_FRAMES];
+//        if(catDyingSpriteSheet == null)
+//        {
+//            try {
+//                catDyingSpriteSheet = ImageIO.read(getClass().getClassLoader().getResource("CatDying.png"));
+//                for(int i = 0; i < CAT_DYING_FRAMES; i++)
+//                {
+//                    Image tempImage = catDyingSpriteSheet.getSubimage(i*32,0,CAT_PIXEL_WIDTH,CAT_PIXEL_HEIGHT);
+//                    catDyingSprite[i] = scaleUpImage(CAT_DISPLAY_IMAGE_WIDTH, CAT_DISPLAY_IMAGE_HEIGHT, tempImage);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
     public void drawCat()
     {
-        if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
+        if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.IDLE))
         {
             if(catIdleSprite == null)
             {
                 initCatIdle();
             }
         }
-        else if(catController.getCat().getCatStateType().equals(CatStateType.EATING))
+        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.EATING))
         {
             if(catEatSprite == null)
             {
                 initCatEat();
             }
         }
-        else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
+        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DYING))
         {
             if(catDyingSprite == null)
             {
                 initDyingCat();
             }
         }
-        else if(catController.getCat().getCatStateType().equals(CatStateType.DEAD))
+        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DEAD))
         {
             if(catDeadSprite == null)
             {
@@ -252,13 +223,10 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
-    public Image scaleUpImage(int scaleWidth, int scaleHeight, Image image)
-    {
-        return image.getScaledInstance(scaleWidth,scaleHeight,Image.SCALE_SMOOTH);
 
-    }
 
     //Actions performed whenever someone clicks on a button or whenever timer calls it every second
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -266,29 +234,29 @@ public class Game extends JPanel implements ActionListener {
         //TODO REMOVE WHEN DONE
         if(e.getSource() == debugHungryButton)
         {
-            catController.hungryCat();
+            sillyCatGameController.hungryCat();
         }
         if(e.getSource() == menuButton)
         {
-            viewController.setGameState(GameStateType.MENU);
+            gameStateController.setGameState(GameStateType.MENU);
         }
         if(e.getSource() == feedButton)
         {
-            catController.feedCat();
-            catController.setCatState(CatStateType.EATING);
-            System.out.println(catController.getCat().getFullness());
+            sillyCatGameController.feedCat();
+            sillyCatGameController.setCatState(CatStateType.EATING);
+            System.out.println(sillyCatGameController.getCat().getFullness());
         }
         if(e.getSource() == timer)
         {
             time++;
 
-            catController.catDecayHunger();
-            catController.updateCatState();
+            sillyCatGameController.catDecayHunger();
+            sillyCatGameController.updateCatState();
             drawCat();
 
             //this is the logic for displaying cat idle animation
             //Math random to decide when the direct he face changes
-            if(catController.getCat().getCatStateType().equals(CatStateType.IDLE))
+            if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.IDLE))
             {
                 if((int)(Math.random()*10)+1 == 1 )
                 {
@@ -318,7 +286,7 @@ public class Game extends JPanel implements ActionListener {
                     catLabel.setIcon(new ImageIcon(catIdleSprite[3]));
                 }
             }
-            else if(catController.getCat().getCatStateType().equals(CatStateType.EATING))
+            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.EATING))
             {
                 //disable feed button so it can't be spam clicked and re-enable it after the animation ends
                 disableButtons();
@@ -327,11 +295,11 @@ public class Game extends JPanel implements ActionListener {
                 if(index >= CAT_EAT_FRAMES)
                 {
                     index = 0;
-                    catController.setCatState(CatStateType.IDLE);
+                    sillyCatGameController.setCatState(CatStateType.IDLE);
                     enableButtons();
                 }
             }
-            else if(catController.getCat().getCatStateType().equals(CatStateType.DYING))
+            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DYING))
             {
                 if(time % 2 == 0)
                 {
@@ -342,7 +310,7 @@ public class Game extends JPanel implements ActionListener {
                     catLabel.setIcon(new ImageIcon(catDyingSprite[1]));
                 }
             }
-            else if(catController.getCat().getCatStateType().equals(CatStateType.DEAD))
+            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DEAD))
             {
                 catLabel.setIcon(new ImageIcon(catDeadSprite[0]));
                 disableButtons();
@@ -350,6 +318,23 @@ public class Game extends JPanel implements ActionListener {
 
         }
 
-
     }
+
+    public void updateView(GameState gameState)
+    {
+        Cat cat = gameState.getCat();
+        if(cat.getCatStateType().equals(CatStateType.IDLE))
+        {
+            catLabel.setIcon(new ImageIcon(catIdleSprite[0]));
+        }
+        else if(cat.getCatStateType().equals(CatStateType.DYING))
+        {
+            catLabel.setIcon(new ImageIcon(catDyingSprite[0]));
+        }
+        else if(cat.getCatStateType().equals(CatStateType.DEAD))
+        {
+            catLabel.setIcon(new ImageIcon(catDeadSprite[0]));
+        }
+    }
+
 }

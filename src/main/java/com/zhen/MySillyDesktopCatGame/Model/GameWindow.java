@@ -1,20 +1,9 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
 public class GameWindow {
-    private static final int gameWindowWidth = 800;
-    private static final int gameWindowHeight = 640;
-    private static final String gameName = "My Silly Desktop Cat";
 
-    public int getGameWindowWidth() {
-        return gameWindowWidth;
-    }
-
-    public int getGameWindowHeight() {
-        return gameWindowHeight;
-    }
-
-    public String getGameName() {
-        return gameName;
-    }
+    public static final int GAME_WINDOW_WIDTH = 800;
+    public static final int GAME_WINDOW_HEIGHT = 640;
+    public static final String GAME_NAME = "My Silly Desktop Cat";
 
 }

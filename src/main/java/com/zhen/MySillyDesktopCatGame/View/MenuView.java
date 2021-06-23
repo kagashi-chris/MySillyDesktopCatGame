@@ -1,6 +1,6 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
-import com.zhen.MySillyDesktopCatGame.Controller.ViewController;
+import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
 import javax.imageio.ImageIO;
@@ -8,20 +8,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Menu extends JPanel implements ActionListener{
+public class MenuView extends JPanel implements ActionListener{
 
-    private ViewController viewController;
+    private static MenuView instance;
+    private MainController mainController;
     private JButton playButton;
     private JButton exitButton;
     private JLabel title;
     private Image titleImage;
 
-    public Menu(ViewController viewController) {
-        this.viewController = viewController;
+    public MenuView(MainController mainController) {
+        this.mainController = mainController;
 
         playButton = new JButton("Play");
         playButton.setBounds(20,20, 100,20);
@@ -48,6 +47,15 @@ public class Menu extends JPanel implements ActionListener{
         }
     }
 
+    public static synchronized MenuView getInstance(MainController mainController)
+    {
+        if(instance == null)
+        {
+            instance = new MenuView(mainController);
+        }
+        return instance;
+    }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         this.setBackground(Color.LIGHT_GRAY);
@@ -67,12 +75,13 @@ public class Menu extends JPanel implements ActionListener{
         if (e.getSource() == playButton)
         {
             System.out.println("PLAY!");
-            viewController.setGameState(GameStateType.GAME);
+            mainController.setGameState(GameStateType.SILLY_CAT_GAME);
+
         }
         else if(e.getSource() == exitButton)
         {
             System.out.println("EXIT!");
-            viewController.setGameState(GameStateType.EXIT);
+            mainController.setGameState(GameStateType.EXIT);
         }
     }
 }
