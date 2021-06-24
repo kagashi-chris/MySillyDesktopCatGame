@@ -5,12 +5,14 @@ import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.*;
 import com.zhen.MySillyDesktopCatGame.View.SillyCatGameView;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
-public class SillyCatGameController {
+public class SillyCatGameController implements ActionListener {
 
     private List<SillyCatGameView> sillyCatGameViewObservers;
     private MainController mainController;
@@ -18,7 +20,14 @@ public class SillyCatGameController {
 
     public SillyCatGameController(MainController mainController) {
         this.mainController = mainController;
-        cat = mainController.getGameState().getCat();
+        initCat();
+    }
+
+    public void initCat()
+    {
+        cat = Cat.getInstance();
+        //TODO read from file and set cat params
+        mainController.getGameState().setCat(cat);
     }
 
 //    public void initCatState(Cat cat)
@@ -124,5 +133,10 @@ public class SillyCatGameController {
     public void unsubscribe(SillyCatGameView sillyCatGameView)
     {
         this.sillyCatGameViewObservers.remove(sillyCatGameView);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }

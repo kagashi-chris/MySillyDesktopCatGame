@@ -13,7 +13,7 @@ public class AnimationController {
         State.dying = new Dying();
         State.dead = new Dead();
 
-        State.current =
+        State.current = null;
     }
 }
 
@@ -34,7 +34,7 @@ class Idle extends State{
 
     void update()
     {
-        switch()
+
     }
 }
 

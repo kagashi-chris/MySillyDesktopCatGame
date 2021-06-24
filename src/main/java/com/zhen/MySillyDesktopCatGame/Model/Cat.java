@@ -10,6 +10,7 @@ public class Cat {
     private int happiness;
     private CatStateType catStateType;
     private LocalDateTime catLastUpdated;
+    private static Cat instance;
 
     //cat fullness goes up to 100000 and starts at 50000. The reason for this is because I wanted the hunger to
     //tick down by one every second.
@@ -23,6 +24,14 @@ public class Cat {
     public Cat(int fullness, int happiness) {
         this.fullness = fullness;
         this.happiness = happiness;
+    }
+    public static synchronized Cat getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new Cat();
+        }
+        return instance;
     }
 
     public int getFullness() {

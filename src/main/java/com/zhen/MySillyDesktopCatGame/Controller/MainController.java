@@ -22,13 +22,11 @@ public class MainController implements Runnable{
 
     public MainController() {
         gameState = new GameState(GameStateType.MENU);
-        GameWindow gameWindow = new GameWindow();
 
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
         animationController = new AnimationController(this);
-
 
         mainWindowView = new MainWindowView(this);
 
@@ -106,6 +104,11 @@ public class MainController implements Runnable{
 
     }
 
+    public void update()
+    {
+        mainWindowView.switchScreenTo(gameState.getGameStateType());
+    }
+
     private void handleSwitchScreenTo(SwitchScreenToAction action)
     {
         gameState.setGameStateType(action.getGameStateType());
@@ -120,10 +123,7 @@ public class MainController implements Runnable{
     {
         gameState.setGameStateType(gameStateType);
         System.out.println("Game state set to: " + gameStateType.toString());
-        if(gameStateType.equals(GameStateType.EXIT))
-        {
-            System.exit(1);
-        }
+        update();
     }
 
     public MenuController getMenuController() {

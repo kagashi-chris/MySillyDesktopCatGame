@@ -54,8 +54,6 @@ public class SillyCatGameView extends JPanel implements ActionListener {
     Timer timer = new Timer(1000,this);
     int time = 0;
 
-
-
     //this class manages the display of Game elements within the frame. it constructs the buttons/graphics.
     //Action listeners are placed on the buttons so view controller and/or cat controller can be notifed when
     //certain buttons are pressed. The animation of the cat changes on a timer. Every one second the timer will call
@@ -67,32 +65,34 @@ public class SillyCatGameView extends JPanel implements ActionListener {
 
         menuButton = new JButton("Menu");
         menuButton.setBounds(20,20, 100,20);
-        menuButton.addActionListener(this);
+        menuButton.addActionListener(mainController.getSillyCatGameController());
 
         feedButton = new JButton("Feed");
         feedButton.setBounds(20,60, 100,20);
-        feedButton.addActionListener(this);
+        feedButton.addActionListener(mainController.getSillyCatGameController());
 
         playButton = new JButton("Play");
         playButton.setBounds(20,100, 100,20);
-        playButton.addActionListener(this);
+        playButton.addActionListener(mainController.getSillyCatGameController());
 
         //TODO REMOVE WHEN DONE
         debugHungryButton = new JButton("Hungry");
         debugHungryButton.setBounds(20,140, 100,20);
-        debugHungryButton.addActionListener(this);
+        debugHungryButton.addActionListener(mainController.getSillyCatGameController());
 
         buttonList.add(playButton);
         buttonList.add(feedButton);
         buttonList.add(debugHungryButton);
         buttonList.add(menuButton);
-        //draw cat lazy loads the sprite base on CatStateType
-        drawCat();
-        catLabel = new JLabel();
-        //display cat decides what gets shown in the label base on CatStateType
-        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+
         initView();
-        timer.start();
+        //draw cat lazy loads the sprite base on CatStateType
+//        drawCat();
+//        catLabel = new JLabel();
+        //display cat decides what gets shown in the label base on CatStateType
+//        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+//        initView();
+//        timer.start();
     }
 
 
@@ -112,7 +112,7 @@ public class SillyCatGameView extends JPanel implements ActionListener {
         this.add(feedButton);
         this.add(playButton);
         this.add(debugHungryButton);
-        this.add(catLabel);
+//        this.add(catLabel);
         this.setLayout(null);
     }
     //lazy load the cat sprite and save all the animation to catIdleSprite list
@@ -191,134 +191,37 @@ public class SillyCatGameView extends JPanel implements ActionListener {
 //            }
 //        }
 //    }
-    public void drawCat()
-    {
-        if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.IDLE))
-        {
-            if(catIdleSprite == null)
-            {
-                initCatIdle();
-            }
-        }
-        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.EATING))
-        {
-            if(catEatSprite == null)
-            {
-                initCatEat();
-            }
-        }
-        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DYING))
-        {
-            if(catDyingSprite == null)
-            {
-                initDyingCat();
-            }
-        }
-        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DEAD))
-        {
-            if(catDeadSprite == null)
-            {
-                initDeadCat();
-            }
-        }
-    }
-
-
-
-    //Actions performed whenever someone clicks on a button or whenever timer calls it every second
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-
-        //TODO REMOVE WHEN DONE
-        if(e.getSource() == debugHungryButton)
-        {
-            sillyCatGameController.hungryCat();
-        }
-        if(e.getSource() == menuButton)
-        {
-            gameStateController.setGameState(GameStateType.MENU);
-        }
-        if(e.getSource() == feedButton)
-        {
-            sillyCatGameController.feedCat();
-            sillyCatGameController.setCatState(CatStateType.EATING);
-            System.out.println(sillyCatGameController.getCat().getFullness());
-        }
-        if(e.getSource() == timer)
-        {
-            time++;
-
-            sillyCatGameController.catDecayHunger();
-            sillyCatGameController.updateCatState();
-            drawCat();
-
-            //this is the logic for displaying cat idle animation
-            //Math random to decide when the direct he face changes
-            if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.IDLE))
-            {
-                if((int)(Math.random()*10)+1 == 1 )
-                {
-                    if(facingRight == true)
-                    {
-                        facingRight = false;
-                    }
-                    else if(facingRight == false)
-                    {
-                        facingRight = true;
-                    }
-                }
-                if(time % 2 == 0 && facingRight == true)
-                {
-                    catLabel.setIcon(new ImageIcon(catIdleSprite[0]));
-                }
-                else if(time % 2 != 0 && facingRight == true)
-                {
-                    catLabel.setIcon(new ImageIcon(catIdleSprite[1]));
-                }
-                else if(time % 2 == 0 && facingRight == false)
-                {
-                    catLabel.setIcon(new ImageIcon(catIdleSprite[2]));
-                }
-                else if(time % 2 != 0 && facingRight == false)
-                {
-                    catLabel.setIcon(new ImageIcon(catIdleSprite[3]));
-                }
-            }
-            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.EATING))
-            {
-                //disable feed button so it can't be spam clicked and re-enable it after the animation ends
-                disableButtons();
-                catLabel.setIcon(new ImageIcon(catEatSprite[index]));
-                index++;
-                if(index >= CAT_EAT_FRAMES)
-                {
-                    index = 0;
-                    sillyCatGameController.setCatState(CatStateType.IDLE);
-                    enableButtons();
-                }
-            }
-            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DYING))
-            {
-                if(time % 2 == 0)
-                {
-                    catLabel.setIcon(new ImageIcon(catDyingSprite[0]));
-                }
-                else
-                {
-                    catLabel.setIcon(new ImageIcon(catDyingSprite[1]));
-                }
-            }
-            else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DEAD))
-            {
-                catLabel.setIcon(new ImageIcon(catDeadSprite[0]));
-                disableButtons();
-            }
-
-        }
-
-    }
+//    public void drawCat()
+//    {
+//        if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.IDLE))
+//        {
+//            if(catIdleSprite == null)
+//            {
+//                initCatIdle();
+//            }
+//        }
+//        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.EATING))
+//        {
+//            if(catEatSprite == null)
+//            {
+//                initCatEat();
+//            }
+//        }
+//        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DYING))
+//        {
+//            if(catDyingSprite == null)
+//            {
+//                initDyingCat();
+//            }
+//        }
+//        else if(sillyCatGameController.getCat().getCatStateType().equals(CatStateType.DEAD))
+//        {
+//            if(catDeadSprite == null)
+//            {
+//                initDeadCat();
+//            }
+//        }
+//    }
 
     public void updateView(GameState gameState)
     {
