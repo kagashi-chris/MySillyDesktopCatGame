@@ -1,47 +1,57 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
-import com.zhen.MySillyDesktopCatGame.View.AnimatedCatSprite;
-import com.zhen.MySillyDesktopCatGame.View.AnimatedSprite;
+import com.zhen.MySillyDesktopCatGame.View.CatAnimatedSprite;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class SpriteUtil {
 
-    public static final String CAT_IDLE_ANIMATION_PATH = "CatIdle.png";
-    public static final int CAT_IDLE_FRAMES = 4;
-    private final int CAT_DISPLAY_IMAGE_WIDTH = 256;
-    private final int CAT_DISPLAY_IMAGE_HEIGHT = 256;
-    private final int CAT_PIXEL_WIDTH = 32;
-    private final int CAT_PIXEL_HEIGHT = 32;
+    public static final int DEFAULT_SCALE_FACTOR = 4;
 
-    //lazy load the cat sprite and save all the animation to catIdleSprite list
-    //There are currently 4 Sprite images each being 32 x 32 pixels
-    //used a for loop to get the sub images inside the sprite sheet
-    //tempImage uses scaleUpImage method and scales up the 32 x 32 pixel art to appear larger on screen
-    public AnimatedSprite createAnimatedSprite(String spriteSheetPath, int numAnimationFrames, int pixelWidth, int pixelHeight, int displayPixelWidth, int displayPixelHeight)
+    public static Icon getImageIconFromFile(String filePath)
     {
-        Image[] images = new Image[numAnimationFrames];
+        ImageIcon imageIcon = null;
+        try
+        {
+            imageIcon = new ImageIcon(ImageIO.read(SpriteUtil.class.getClassLoader().getResource(filePath)));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return imageIcon;
+    }
+
+    private static Icon[] getImageIconsFromSpriteSheet(String spriteSheetPath, int numAnimationFrames, int pixelWidth, int pixelHeight, int scaleFactor)
+    {
+        ImageIcon[] imageIcons = new ImageIcon[numAnimationFrames];
         try {
-            BufferedImage spriteSheet = ImageIO.read(getClass().getClassLoader().getResource(spriteSheetPath));
+            BufferedImage spriteSheet = ImageIO.read(SpriteUtil.class.getClassLoader().getResource(spriteSheetPath));
             for(int i = 0; i < numAnimationFrames; i++)
             {
                 Image tempImage = spriteSheet.getSubimage(i*32,0, pixelWidth,pixelHeight);
-                images[i] = scaleUpImage(displayPixelWidth, displayPixelHeight, tempImage);
+                imageIcons[i] = new ImageIcon(tempImage.getScaledInstance(pixelWidth*scaleFactor,pixelHeight*scaleFactor,Image.SCALE_SMOOTH));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AnimatedSprite animatedCatSprite = new AnimatedCatSprite(images);
-        return animatedCatSprite;
+
+        return imageIcons;
     }
 
-    public Image scaleUpImage(int scaleWidth, int scaleHeight, Image image)
+    public static CatAnimatedSprite createCatAnimatedSprite(String spriteSheetPath1, String spritePath2, String spritePath3, String spritePath4, int numAnimationFrames, int pixelWidth, int pixelHeight, int scaleFactor)
     {
-        return image.getScaledInstance(scaleWidth,scaleHeight,Image.SCALE_SMOOTH);
-
+        //TODO change to take in a list of sprite path instead
+        Icon[] imageIcons = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
+        Icon[] imageIcons2 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
+        Icon[] imageIcons3 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
+        Icon[] imageIcons4 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
+        CatAnimatedSprite catAnimatedSprite = new CatAnimatedSprite(imageIcons, imageIcons2, imageIcons3, imageIcons4);
+        return catAnimatedSprite;
     }
 }

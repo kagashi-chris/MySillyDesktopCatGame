@@ -1,30 +1,16 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
-import java.awt.*;
+import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
+
+import javax.swing.Icon;
+import javax.swing.JLabel;
 
 public abstract class AnimatedSprite {
 
-    private Image[] images;
-    private int counter = 0;
+    private static Icon defaultIcon = SpriteUtil.getImageIconFromFile("ERROR.png");
 
-    public AnimatedSprite(Image[] images) {
-        this.images = images;
-    }
-
-    public Image getCurrentFrame()
+    public void draw(JLabel spriteComponent)
     {
-        return images[counter];
-    }
-
-    //advance the animation by one frame
-    public void next()
-    {
-        if(counter<images.length)
-        {
-            counter++;
-        }
-        else{
-            counter = 0;
-        }
+        spriteComponent.setIcon(defaultIcon);
     }
 }

@@ -1,8 +1,13 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Action.Action;
+import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
+import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.*;
+import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
+import com.zhen.MySillyDesktopCatGame.View.AnimatedSprite;
 import com.zhen.MySillyDesktopCatGame.View.SillyCatGameView;
 
 import java.awt.event.ActionEvent;
@@ -11,53 +16,33 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+public class SillyCatGameController{
 
-public class SillyCatGameController implements ActionListener {
-
-    private List<SillyCatGameView> sillyCatGameViewObservers;
     private MainController mainController;
-    private Cat cat;
 
     public SillyCatGameController(MainController mainController) {
         this.mainController = mainController;
-        initCat();
     }
 
-    public void initCat()
+    public void handleFeedCat(FeedAction action)
     {
-        cat = Cat.getInstance();
-        //TODO read from file and set cat params
-        mainController.getGameState().setCat(cat);
+        Cat cat = action.getCat();
+        cat.setFullness(cat.getFullness()+30000);
+        cat.setCatStateType(CatStateType.EATING);
+        System.out.println(cat.getFullness());
+        mainController.getGameState().setButtonsDisabled(true);
     }
 
-//    public void initCatState(Cat cat)
-//    {
-//        int minutesSinceLastUpdate = compareLastSavedDateInMinutes();
-//        int currentHunger = cat.getFullness() - (minutesSinceLastUpdate/6);
-//        int currentHappiness = cat.getHappiness() - (minutesSinceLastUpdate/6);
-//
-//        if(currentHappiness < 0 || currentHunger < 0)
-//        {
-//            setCatState(CatStateType.DEAD);
-//        }
-//        else if(currentHappiness < 30000 || currentHunger < 30000)
-//        {
-//            setCatState(CatStateType.DYING);
-//        }
-//        else
-//        {
-//            setCatState(CatStateType.IDLE);
-//        }
-//
-//    }
-
-    public void setCatState(CatStateType catStateType)
+    //TODO debug get rid after
+    public void handleMakeHungryDebugAction(MakeHungryDebugAction action)
     {
-        mainController.getGameState().getCat().setCatStateType(catStateType);
+        Cat cat = action.getCat();
+        cat.setFullness(cat.getFullness()-30000);
+        System.out.println(cat.getFullness());
     }
 
     //gets current time and compare it to the saved time inside cat.csv and return the difference in minutes
-    public int compareLastSavedDateInMinutes()
+    public int compareLastSavedDateInMinutes(Cat cat)
     {
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime savedTime = cat.getCatLastUpdated();
@@ -66,77 +51,50 @@ public class SillyCatGameController implements ActionListener {
     }
 
     //cat loses 1point of hunger every second
-    public void catDecayHunger()
+    public void catDecayHunger(Cat cat)
     {
         cat.setFullness(cat.getFullness()-1);
         System.out.println("Current Hunger Value After Decay: " + cat.getFullness());
     }
 
-    public void updateCatState()
+    public void updateCatState(Cat cat)
     {
         if(cat.getFullness()>30000 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
-            setCatState(CatStateType.IDLE);
+            cat.setCatStateType(CatStateType.IDLE);
         }
         else if(cat.getFullness()<=30000 && cat.getFullness() > 0 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
-            setCatState(CatStateType.DYING);
+            cat.setCatStateType(CatStateType.DYING);
         }
         else if(cat.getFullness()<=0)
         {
-            setCatState(CatStateType.DEAD);
+            cat.setCatStateType(CatStateType.DEAD);
         }
+        System.out.println(cat.getCatStateType());
     }
 
-    //TODO debug get rid after
-    public void hungryCat()
+    public void initCatState(Cat cat)
     {
-        cat.setFullness(cat.getFullness()-30000);
-    }
+        int minutesSinceLastUpdate = compareLastSavedDateInMinutes(cat);
+        int currentHunger = cat.getFullness() - (minutesSinceLastUpdate/6);
+        int currentHappiness = cat.getHappiness() - (minutesSinceLastUpdate/6);
 
-    public Cat getCat()
-    {
-        return this.cat;
-    }
-
-    public void performAction(Action action)
-    {
-        if (action instanceof FeedAction)
+        if(currentHappiness < 0 || currentHunger < 0)
         {
-            handleFeedCat((FeedAction) action);
+            cat.setCatStateType(CatStateType.DEAD);
         }
-
-    }
-
-    private void notifyObservers(GameState gameState)
-    {
-        for(SillyCatGameView sillyCatGameView: sillyCatGameViewObservers)
+        else if(currentHappiness < 30000 || currentHunger < 30000)
         {
-            sillyCatGameView.updateView(gameState);
+            cat.setCatStateType(CatStateType.DYING);
         }
-    }
-
-    public void handleFeedCat(FeedAction feedAction)
-    {
-        GameState gameState = mainController.getGameState();
-        Cat cat = gameState.getCat();
-        cat.setFullness(cat.getFullness()+30000);
-        gameState.setButtonsDisabled(true);
-        notifyObservers(gameState);
-    }
-
-    public void subscribe(SillyCatGameView sillyCatGameView)
-    {
-        this.sillyCatGameViewObservers.add(sillyCatGameView);
-    }
-
-    public void unsubscribe(SillyCatGameView sillyCatGameView)
-    {
-        this.sillyCatGameViewObservers.remove(sillyCatGameView);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
+        else
+        {
+            cat.setCatStateType(CatStateType.IDLE);
+        }
 
     }
+
+
+
 }

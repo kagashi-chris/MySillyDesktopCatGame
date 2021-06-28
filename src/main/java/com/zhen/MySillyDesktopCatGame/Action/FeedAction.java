@@ -1,8 +1,9 @@
-package com.zhen.MySillyDesktopCatGame.Type;
+package com.zhen.MySillyDesktopCatGame.Action;
 
+import com.zhen.MySillyDesktopCatGame.Action.Action;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 
-public class FeedAction implements Action{
+public class FeedAction implements Action {
 
     private Cat cat;
 

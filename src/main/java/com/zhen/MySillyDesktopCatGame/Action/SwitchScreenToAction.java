@@ -1,4 +1,6 @@
-package com.zhen.MySillyDesktopCatGame.Type;
+package com.zhen.MySillyDesktopCatGame.Action;
+
+import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
 public class SwitchScreenToAction implements Action{
 

@@ -2,11 +2,13 @@ package com.zhen.MySillyDesktopCatGame.Model;
 
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
+import java.util.List;
+
 public class GameState {
 
     private boolean buttonsDisabled;
     private GameStateType gameStateType;
-    private Cat cat;
+    private List<Cat> catList;
 
     public GameState(){
     }
@@ -23,12 +25,12 @@ public class GameState {
         this.gameStateType = gameStateType;
     }
 
-    public Cat getCat() {
-        return cat;
+    public List<Cat> getCatList() {
+        return catList;
     }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
+    public void setCatList(List<Cat> catList) {
+        this.catList = catList;
     }
 
     public boolean isButtonsDisabled() {
@@ -44,7 +46,7 @@ public class GameState {
         return "GameState{" +
                 "buttonsDisabled=" + buttonsDisabled +
                 ", gameStateType=" + gameStateType +
-                ", cat=" + cat +
+                ", cat=" + catList +
                 '}';
     }
 }

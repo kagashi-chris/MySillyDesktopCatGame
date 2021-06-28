@@ -1,10 +1,17 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Action.Action;
+import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
+import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
+import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
+import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
-import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.*;
-import com.zhen.MySillyDesktopCatGame.Util.FileUtil;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
+import com.zhen.MySillyDesktopCatGame.View.SillyCatGameView;
+import com.zhen.MySillyDesktopCatGame.View.View;
+
+import java.util.List;
 
 public class MainController implements Runnable{
 
@@ -18,27 +25,21 @@ public class MainController implements Runnable{
     private MinigameController minigameController;
     private AnimationController animationController;
 
+    private List<View> viewObservers;
+
     private GameState gameState;
 
     public MainController() {
         gameState = new GameState(GameStateType.MENU);
 
+        mainWindowView = new MainWindowView(this);
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
         animationController = new AnimationController(this);
 
-        mainWindowView = new MainWindowView(this);
-
         start();
     }
-
-    //gets the csv data and converts it into a cat object
-//    private void initGameFile()
-//    {
-//        cat = FileUtil.csvReader("Cat.csv");
-//    }
-
 
     private synchronized void start()
     {
@@ -92,7 +93,7 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-        mainWindowView.mainViewLoop();
+//        mainWindowView.mainViewLoop();
     }
 
     public void performAction(Action action)
@@ -101,12 +102,33 @@ public class MainController implements Runnable{
         {
             handleSwitchScreenTo((SwitchScreenToAction)action);
         }
-
+        else if (action instanceof FeedAction)
+        {
+            sillyCatGameController.handleFeedCat((FeedAction) action);
+        }
+        else if (action instanceof MakeHungryDebugAction)
+        {
+            sillyCatGameController.handleMakeHungryDebugAction((MakeHungryDebugAction) action);
+        }
+        notifyObservers(gameState);
     }
 
-    public void update()
+    private void notifyObservers(GameState gameState)
     {
-        mainWindowView.switchScreenTo(gameState.getGameStateType());
+        for(View view: viewObservers)
+        {
+            view.updateView(gameState);
+        }
+    }
+
+    public void subscribe(View view)
+    {
+        viewObservers.add(view);
+    }
+
+    public void unsubscribe(View view)
+    {
+        viewObservers.remove(view);
     }
 
     private void handleSwitchScreenTo(SwitchScreenToAction action)
@@ -119,11 +141,8 @@ public class MainController implements Runnable{
         return gameState;
     }
 
-    public void setGameState(GameStateType gameStateType)
-    {
-        gameState.setGameStateType(gameStateType);
-        System.out.println("Game state set to: " + gameStateType.toString());
-        update();
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public MenuController getMenuController() {
@@ -138,4 +157,11 @@ public class MainController implements Runnable{
     public SillyCatGameController getSillyCatGameController() {
         return sillyCatGameController;
     }
+
+    public AnimationController getAnimationController()
+    {
+        return animationController;
+    }
+
+
 }

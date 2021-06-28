@@ -1,7 +1,6 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
-import com.zhen.MySillyDesktopCatGame.Controller.SillyCatGameController;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
@@ -10,11 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 
 //TODO remove timer from this class and update the tick in mainController
-public class MainWindowView extends JFrame {
+public class MainWindowView extends JFrame implements View{
 
-    private GameState gameState;
-    private JPanel currentView;
     private MenuView menuView;
+    private SillyCatGameView sillyCatGameView;
     private JPanel panelController = new JPanel();
     private CardLayout layout = new CardLayout();
     private MainController mainController;
@@ -29,6 +27,7 @@ public class MainWindowView extends JFrame {
         this.add(panelController);
         switchScreenTo(GameStateType.MENU);
 
+        mainController.subscribe(this);
         this.setVisible(true);
     }
 
@@ -38,18 +37,23 @@ public class MainWindowView extends JFrame {
 
     public void switchScreenTo(GameStateType gameStateType)
     {
-        panelController.removeAll();
         switch(gameStateType)
         {
             case SILLY_CAT_GAME:
-                currentView = SillyCatGameView.getInstance(mainController);
-                panelController.add(currentView, "game");
+                sillyCatGameView = SillyCatGameView.getInstance(mainController);
+                if(sillyCatGameView.getParent() != panelController)
+                {
+                    panelController.add(sillyCatGameView, "game");
+                }
                 layout.show(panelController,"game");
                 break;
 
             case MENU:
-                currentView = MenuView.getInstance(mainController);
-                panelController.add(currentView, "menu");
+                menuView = MenuView.getInstance(mainController);
+                if(menuView.getParent() != panelController)
+                {
+                    panelController.add(menuView, "menu");
+                }
                 layout.show(panelController,"menu");
                 break;
 
@@ -58,4 +62,8 @@ public class MainWindowView extends JFrame {
         }
     }
 
+    @Override
+    public void updateView(GameState gameState) {
+        switchScreenTo(gameState.getGameStateType());
+    }
 }

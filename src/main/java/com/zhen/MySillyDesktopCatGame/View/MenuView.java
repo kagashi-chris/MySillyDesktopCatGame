@@ -2,17 +2,14 @@ package com.zhen.MySillyDesktopCatGame.View;
 
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Controller.MenuController;
-import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
-import com.zhen.MySillyDesktopCatGame.Type.SwitchScreenToAction;
+import com.zhen.MySillyDesktopCatGame.Model.GameState;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
-public class MenuView extends JPanel{
+public class MenuView extends JPanel implements View, ActionListener {
 
     private static MenuView instance;
     private MainController mainController;
@@ -28,27 +25,33 @@ public class MenuView extends JPanel{
 
         playButton = new JButton("Play");
         playButton.setBounds(20,20, 100,20);
-        playButton.addActionListener(menuController);
+        playButton.addActionListener(this);
 
         exitButton = new JButton("Exit");
         exitButton.setBounds(20,60, 100,20);
-        exitButton.addActionListener(menuController);
+        exitButton.addActionListener(this);
 
-        title = new JLabel();
-        initTitle();
-        title.setIcon(new ImageIcon(titleImage));
-        title.setBounds(250,50,300,300);
+//        title = new JLabel();
+//        title.setIcon(new ImageIcon(titleImage));
+//        title.setBounds(250,50,300,300);
+        initView();
+        mainController.subscribe(this);
     }
 
-    public void initTitle()
+    public void initView()
     {
-        try {
-            titleImage = ImageIO.read(getClass().getClassLoader().getResource("MySillyDesktopCatTitle.png"));
-            titleImage.getScaledInstance(300,300,1);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            titleImage = ImageIO.read(getClass().getClassLoader().getResource("MySillyDesktopCatTitle.png"));
+//            titleImage.getScaledInstance(300,300,1);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        this.setBackground(Color.LIGHT_GRAY);
+        this.add(playButton);
+        this.add(exitButton);
+        this.add(title);
+        this.setLayout(null);
     }
 
     public static synchronized MenuView getInstance(MainController mainController)
@@ -60,13 +63,13 @@ public class MenuView extends JPanel{
         return instance;
     }
 
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        this.setBackground(Color.LIGHT_GRAY);
-        this.add(playButton);
-        this.add(exitButton);
-        this.add(title);
+    @Override
+    public void updateView(GameState gameState) {
 
-        this.setLayout(null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        
     }
 }
