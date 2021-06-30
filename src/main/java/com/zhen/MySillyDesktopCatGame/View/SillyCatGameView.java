@@ -8,6 +8,7 @@ import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,11 +18,10 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SillyCatGameView extends JPanel implements ActionListener, View{
-
-    private static SillyCatGameView sillyCatGameView;
 
     private JButton menuButton;
     private JButton feedButton;
@@ -35,30 +35,20 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     private MainController mainController;
     private static SillyCatGameView instance;
 
-    private Cat cat;
+    private Cat selectedCat = null;
 
-//    private BufferedImage catIdleSpriteSheet;
-//    private BufferedImage catEatSpriteSheet;
-//    private BufferedImage catDyingSpriteSheet;
-//    private BufferedImage catDeadSpriteSheet;
-//    private BufferedImage heartSpriteSheet;
-//
-//    private Image[] catIdleSprite;
-//    private Image[] catEatSprite;
-//    private Image[] catDyingSprite;
-//    private Image[] catDeadSprite;
-//    private Image[] heartSprite;
-//
-//    private final int CAT_IDLE_FRAMES = 4;
-//    private final int CAT_EAT_FRAMES = 7;
-//    private final int CAT_DYING_FRAMES = 2;
-//    private final int CAT_DEAD_FRAMES = 1;
     private final int CAT_DISPLAY_IMAGE_WIDTH = 128;
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 128;
 
-    private boolean facingRight = true;
-    private int index = 0;
-    int time = 0;
+    private CatAnimatedSprite catAnimatedSprite;
+
+    private static Map<CatStateType, SpriteUtil.AnimationData> catSpriteSheetPathTable  = new HashMap<>() {{
+        put(CatStateType.EATING, new SpriteUtil.AnimationData("CatEat.png", 7,32,32,4));
+        put(CatStateType.DYING, new SpriteUtil.AnimationData("CatDying.png", 2,32,32,4));
+        put(CatStateType.DEAD, new SpriteUtil.AnimationData("CatDead.png", 1,32,32,4));
+        put(CatStateType.IDLE_LEFT, new SpriteUtil.AnimationData("CatIdleLeft.png", 2,32,32,4));
+        put(CatStateType.IDLE_RIGHT, new SpriteUtil.AnimationData("CatIdleRight.png", 2,32,32,4));
+    }};
 
     //this class manages the display of Game elements within the frame. it constructs the buttons/graphics.
     //Action listeners are placed on the buttons so view controller and/or cat controller can be notifed when
@@ -93,6 +83,7 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
 
         catLabel = new JLabel(new ImageIcon());
         catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+        catAnimatedSprite = SpriteUtil.createCatAnimatedSprite(catSpriteSheetPathTable);
         initView();
         mainController.subscribe(this);
     }
@@ -118,19 +109,15 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         this.setLayout(null);
     }
 
-    private void displayCatStateType(CatStateType catStateType)
-    {
-
-    }
-
     @Override
     public void updateView(GameState gameState)
     {
-        List<Cat> catList = gameState.getCatList();
-        for(Cat cat:catList)
-        {
-
-        }
+//        List<Cat> catList = gameState.getCatList();
+//        for(Cat cat:catList)
+//        {
+//            catAnimatedSprite.draw(catLabel,cat);
+//        }
+//        selectedCat = catList.get(0);
     }
 
     @Override
@@ -145,12 +132,12 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
 
             case "Feed":
                 System.out.println("FEED PRESSED");
-                mainController.performAction(new FeedAction(cat));
+                mainController.performAction(new FeedAction(selectedCat));
                 break;
 
             case "Hungry":
                 System.out.println("HUNGRY PRESSED");
-                mainController.performAction(new MakeHungryDebugAction(cat));
+                mainController.performAction(new MakeHungryDebugAction(selectedCat));
                 break;
 
             case "Play":

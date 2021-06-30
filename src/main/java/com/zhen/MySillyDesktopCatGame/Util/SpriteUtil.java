@@ -1,13 +1,16 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
+import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.View.CatAnimatedSprite;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import java.awt.*;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpriteUtil {
 
@@ -18,6 +21,7 @@ public class SpriteUtil {
         ImageIcon imageIcon = null;
         try
         {
+            System.out.printf("Filepath: %s", filePath);
             imageIcon = new ImageIcon(ImageIO.read(SpriteUtil.class.getClassLoader().getResource(filePath)));
         }
         catch (IOException e)
@@ -44,14 +48,77 @@ public class SpriteUtil {
         return imageIcons;
     }
 
-    public static CatAnimatedSprite createCatAnimatedSprite(String spriteSheetPath1, String spritePath2, String spritePath3, String spritePath4, int numAnimationFrames, int pixelWidth, int pixelHeight, int scaleFactor)
+    public static CatAnimatedSprite createCatAnimatedSprite(Map<CatStateType, AnimationData> catSpriteSheetPathTable)
     {
-        //TODO change to take in a list of sprite path instead
-        Icon[] imageIcons = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
-        Icon[] imageIcons2 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
-        Icon[] imageIcons3 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
-        Icon[] imageIcons4 = getImageIconsFromSpriteSheet(spriteSheetPath1,numAnimationFrames,pixelWidth,pixelHeight,scaleFactor);
-        CatAnimatedSprite catAnimatedSprite = new CatAnimatedSprite(imageIcons, imageIcons2, imageIcons3, imageIcons4);
+        Map<CatStateType, Icon[]> catAnimationTable = new HashMap<>();
+        for(Map.Entry<CatStateType, AnimationData> entry: catSpriteSheetPathTable.entrySet())
+        {
+            catAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
+                entry.getValue().getSpriteSheetPath(),
+                entry.getValue().getNumAnimationFrames(),
+                entry.getValue().getPixelWidth(),
+                entry.getValue().getPixelHeight(),
+                entry.getValue().getScaleFactor()
+            ));
+        }
+        CatAnimatedSprite catAnimatedSprite = new CatAnimatedSprite(catAnimationTable);
         return catAnimatedSprite;
     }
+
+    public static class AnimationData{
+        private String spriteSheetPath;
+        private int numAnimationFrames;
+        private int pixelWidth;
+        private int pixelHeight;
+        private int scaleFactor;
+
+        public AnimationData(String spriteSheetPath, int numAnimationFrames, int pixelWidth, int pixelHeight, int scaleFactor) {
+            this.spriteSheetPath = spriteSheetPath;
+            this.numAnimationFrames = numAnimationFrames;
+            this.pixelWidth = pixelWidth;
+            this.pixelHeight = pixelHeight;
+            this.scaleFactor = scaleFactor;
+        }
+
+        public String getSpriteSheetPath() {
+            return spriteSheetPath;
+        }
+
+        public void setSpriteSheetPath(String spriteSheetPath) {
+            this.spriteSheetPath = spriteSheetPath;
+        }
+
+        public int getNumAnimationFrames() {
+            return numAnimationFrames;
+        }
+
+        public void setNumAnimationFrames(int numAnimationFrames) {
+            this.numAnimationFrames = numAnimationFrames;
+        }
+
+        public int getPixelWidth() {
+            return pixelWidth;
+        }
+
+        public void setPixelWidth(int pixelWidth) {
+            this.pixelWidth = pixelWidth;
+        }
+
+        public int getPixelHeight() {
+            return pixelHeight;
+        }
+
+        public void setPixelHeight(int pixelHeight) {
+            this.pixelHeight = pixelHeight;
+        }
+
+        public int getScaleFactor() {
+            return scaleFactor;
+        }
+
+        public void setScaleFactor(int scaleFactor) {
+            this.scaleFactor = scaleFactor;
+        }
+    }
 }
+

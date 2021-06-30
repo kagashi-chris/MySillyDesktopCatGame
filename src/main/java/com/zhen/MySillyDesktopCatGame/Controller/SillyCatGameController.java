@@ -1,20 +1,12 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
-import com.zhen.MySillyDesktopCatGame.Action.Action;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
-import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.*;
-import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
-import com.zhen.MySillyDesktopCatGame.View.AnimatedSprite;
-import com.zhen.MySillyDesktopCatGame.View.SillyCatGameView;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class SillyCatGameController{
 
@@ -61,7 +53,7 @@ public class SillyCatGameController{
     {
         if(cat.getFullness()>30000 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
-            cat.setCatStateType(CatStateType.IDLE);
+            cat.setCatStateType(CatStateType.IDLE_LEFT);
         }
         else if(cat.getFullness()<=30000 && cat.getFullness() > 0 && !cat.getCatStateType().equals(CatStateType.EATING))
         {
@@ -90,7 +82,7 @@ public class SillyCatGameController{
         }
         else
         {
-            cat.setCatStateType(CatStateType.IDLE);
+            cat.setCatStateType(CatStateType.IDLE_LEFT);
         }
 
     }

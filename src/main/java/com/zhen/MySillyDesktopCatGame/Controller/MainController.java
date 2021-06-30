@@ -4,14 +4,13 @@ import com.zhen.MySillyDesktopCatGame.Action.Action;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
-import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
-import com.zhen.MySillyDesktopCatGame.Type.*;
+import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
-import com.zhen.MySillyDesktopCatGame.View.SillyCatGameView;
 import com.zhen.MySillyDesktopCatGame.View.View;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainController implements Runnable{
 
@@ -25,7 +24,7 @@ public class MainController implements Runnable{
     private MinigameController minigameController;
     private AnimationController animationController;
 
-    private List<View> viewObservers;
+    private List<View> viewObservers = new CopyOnWriteArrayList<>();
 
     private GameState gameState;
 
@@ -96,8 +95,9 @@ public class MainController implements Runnable{
 //        mainWindowView.mainViewLoop();
     }
 
-    public void performAction(Action action)
+    public synchronized void performAction(Action action)
     {
+        System.out.println("Perform action called" );
         if (action instanceof SwitchScreenToAction)
         {
             handleSwitchScreenTo((SwitchScreenToAction)action);
@@ -113,7 +113,7 @@ public class MainController implements Runnable{
         notifyObservers(gameState);
     }
 
-    private void notifyObservers(GameState gameState)
+    private synchronized void notifyObservers(GameState gameState)
     {
         for(View view: viewObservers)
         {
@@ -121,12 +121,13 @@ public class MainController implements Runnable{
         }
     }
 
-    public void subscribe(View view)
+    public synchronized void subscribe(View view)
     {
         viewObservers.add(view);
+        view.updateView(gameState);
     }
 
-    public void unsubscribe(View view)
+    public synchronized void unsubscribe(View view)
     {
         viewObservers.remove(view);
     }

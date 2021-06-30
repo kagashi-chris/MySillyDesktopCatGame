@@ -1,11 +1,12 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
 import com.zhen.MySillyDesktopCatGame.View.AnimatedSprite;
 
 import java.awt.Image;
 
-public class AnimationController{
+public class AnimationController {
 
     private MainController mainController;
 
@@ -15,138 +16,200 @@ public class AnimationController{
     private Image deadSpriteSheet;
     private SpriteUtil spriteUtil = new SpriteUtil();
     private int index = 0;
+    private State catState;
 
     public AnimationController(MainController mainController) {
         this.mainController = mainController;
-
-//        cat.setCatCurrentImage(getIdleSpriteSheetInstance().getCurrentFrame());
-//        mainController.updateImage();
-//        State.idle = new Idle();
-//        State.eating = new Eating();
-//        State.dying = new Dying();
-//        State.dead = new Dead();
-
-//        getCurrentState();
-//        updateCatImage();
     }
 
-    public void animationNext()
-    {
+    public void animationNext() {
         index++;
         System.out.println(index);
     }
 
-
-
-    public AnimatedSprite getIdleSpriteSheetInstance()
-    {
-        if(idleAnimation == null)
-        {
+    public AnimatedSprite getIdleSpriteSheetInstance() {
+        if (idleAnimation == null) {
 //            idleAnimation = spriteUtil.getImagesFromSpriteSheet("CatIdle.png",4,32,32,256,256);
         }
         return idleAnimation;
     }
 
+    public void changeState(AnimationController animationController)
+    {
 
-//
-//    public void updateState()
-//    {
-//        getCurrentState();
-//        State.current.enter();
-//        State.current.update(cat);
-//    }
+    }
 
-//    private void getCurrentState(){
-//        Cat cat = mainController.getGameState().getCat();
-//        switch (cat.getCatStateType())
-//        {
-//            case IDLE:
-//                State.current = State.idle;
-//                break;
-//
-//            case EATING:
-//                State.current = State.eating;
-//                break;
-//
-//            case DYING:
-//                State.current = State.dying;
-//                break;
-//
-//            case DEAD:
-//                State.current = State.dead;
-//                break;
-//
-//            default:
-//                break;
-//        }
-//    }
-//
-//    private void updateCatImage()
-//    {
-//
-//    }
-//}
-//
-//abstract class State{
-//
-//    static State idle, eating, dying, dead, current;
-//
-//    void enter(String path){}
-//    void update(Cat cat){}
-//}
-//
-//class Idle extends State{
-//
-//    private Image idleSpriteSheet;
-//
-//    void enter(String path)
-//    {
-//        System.out.println("Currently in idle state");
-//    }
-//
-//    void update(Cat cat)
-//    {
-//        cat.setCatStateType(CatStateType.IDLE);
-//    }
-//}
-//
-//class Eating extends State{
-//
-//    void enter(String path)
-//    {
-//        System.out.println("Currently in eating state");
-//    }
-//
-//    void update(Cat cat)
-//    {
-//        cat.setCatStateType(CatStateType.EATING);
-//    }
-//}
-//
-//class Dying extends State{
-//
-//    void enter(String path)
-//    {
-//        System.out.println("Currently in dying state");
-//    }
-//
-//    void update(Cat cat)
-//    {
-//        cat.setCatStateType(CatStateType.DYING);
-//    }
-//}
-//
-//class Dead extends State{
-//
-//    void enter(String path)
-//    {
-//        System.out.println("Currently dead state");
-//    }
-//
-//    void update(Cat cat)
-//    {
-//        cat.setCatStateType(CatStateType.DEAD);
-//    }
+    public void idleLeft()
+    {
+        this.catState.setStateToIdleLeft();
+    }
+
+    public void idleRight()
+    {
+        this.catState.setStateToIdleRight();
+    }
+
+    public void eat()
+    {
+        this.catState.setStateToEating();
+    }
+
+    public void dying()
+    {
+        this.catState.setStateToDying();
+    }
+
+    public void dead()
+    {
+        this.catState.setStateToDead();
+    }
+
+
+
+    interface State {
+
+        void setStateToIdleLeft();
+
+        void setStateToIdleRight();
+
+        void setStateToEating();
+
+        void setStateToDying();
+
+        void setStateToDead();
+    }
+
+    class Idle implements State {
+        private AnimationController animationController;
+
+        public Idle(AnimationController animationController) {
+            this.animationController = animationController;
+        }
+
+        @Override
+        public void setStateToIdleLeft() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_LEFT);
+        }
+
+        @Override
+        public void setStateToIdleRight() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_RIGHT);
+        }
+
+        @Override
+        public void setStateToEating() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.EATING);
+        }
+
+        @Override
+        public void setStateToDying() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DYING);
+        }
+
+        @Override
+        public void setStateToDead() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DEAD);
+        }
+    }
+
+    class Eating implements State {
+        private AnimationController animationController;
+
+        public Eating(AnimationController animationController) {
+            this.animationController = animationController;
+        }
+
+        @Override
+        public void setStateToIdleLeft() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_LEFT);
+        }
+
+        @Override
+        public void setStateToIdleRight() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_RIGHT);
+        }
+
+        @Override
+        public void setStateToEating() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.EATING);
+        }
+
+        @Override
+        public void setStateToDying() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DYING);
+        }
+
+        @Override
+        public void setStateToDead() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DEAD);
+        }
+    }
+
+    class Dying implements State {
+        private AnimationController animationController;
+
+        public Dying(AnimationController animationController) {
+            this.animationController = animationController;
+        }
+
+        @Override
+        public void setStateToIdleLeft() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_LEFT);
+        }
+
+        @Override
+        public void setStateToIdleRight() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.IDLE_RIGHT);
+        }
+
+        @Override
+        public void setStateToEating() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.EATING);
+        }
+
+        @Override
+        public void setStateToDying() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DYING);
+        }
+
+        @Override
+        public void setStateToDead() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DEAD);
+        }
+    }
+
+    class Dead implements State {
+        private AnimationController animationController;
+
+        public Dead(AnimationController animationController) {
+            this.animationController = animationController;
+        }
+
+        @Override
+        public void setStateToIdleLeft() {
+            System.out.println("Cat is dead");
+        }
+
+        @Override
+        public void setStateToIdleRight() {
+            System.out.println("Cat is dead");
+        }
+
+        @Override
+        public void setStateToEating() {
+            System.out.println("Cat is dead");
+        }
+
+        @Override
+        public void setStateToDying() {
+            System.out.println("Cat is dead");
+        }
+
+        @Override
+        public void setStateToDead() {
+            animationController.mainController.getGameState().getCatList().get(0).setCatStateType(CatStateType.DEAD);
+        }
+    }
 }
 
 

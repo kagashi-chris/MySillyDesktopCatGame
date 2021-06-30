@@ -2,7 +2,6 @@ package com.zhen.MySillyDesktopCatGame.Model;
 
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 
 public class Cat {
@@ -19,7 +18,7 @@ public class Cat {
     public Cat() {
         fullness = 50000;
         happiness = 50000;
-        catStateType = CatStateType.IDLE;
+        catStateType = CatStateType.IDLE_LEFT;
         catLastUpdated = LocalDateTime.now();
     }
 
