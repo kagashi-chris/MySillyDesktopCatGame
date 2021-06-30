@@ -23,6 +23,7 @@ public class MainController implements Runnable{
     private MenuController menuController;
     private MinigameController minigameController;
     private AnimationController animationController;
+    private AnimationControllerInputs animationControllerInputs;
 
     private List<View> viewObservers = new CopyOnWriteArrayList<>();
 
@@ -36,6 +37,7 @@ public class MainController implements Runnable{
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
         animationController = new AnimationController(this);
+        this.animationControllerInputs = new AnimationControllerInputs(false, 0, gameState.getCatList().get(0));
 
         start();
     }
@@ -75,15 +77,16 @@ public class MainController implements Runnable{
             lastTime = now;
             while(delta>=1)
             {
-                tick();
+
                 ticks++;
                 delta--;
             }
             frames++;
             if(System.currentTimeMillis()-timer>1000)
             {
+                tick();
                 timer+=1000;
-                System.out.println(frames + " Frames Per Second " + ticks + " Updates Per Second");
+//                System.out.println(frames + " Frames Per Second " + ticks + " Updates Per Second");
                 frames = 0;
                 ticks = 0;
             }
@@ -92,7 +95,8 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-//        mainWindowView.mainViewLoop();
+        animationController.nextState(animationControllerInputs);
+        mainWindowView.tick();
     }
 
     public synchronized void performAction(Action action)
@@ -137,7 +141,7 @@ public class MainController implements Runnable{
         gameState.setGameStateType(action.getGameStateType());
     }
 
-    protected GameState getGameState()
+    public GameState getGameState()
     {
         return gameState;
     }

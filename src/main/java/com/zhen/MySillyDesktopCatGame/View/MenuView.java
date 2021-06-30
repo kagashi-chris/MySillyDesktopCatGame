@@ -43,6 +43,11 @@ public class MenuView extends JPanel implements View, MouseListener {
         mainController.subscribe(this);
     }
 
+    @Override
+    public void tick() {
+
+    }
+
     public void initView()
     {
 //        try {

@@ -5,8 +5,9 @@ import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.GameWindow;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.CardLayout;
 
 //TODO remove timer from this class and update the tick in mainController
 public class MainWindowView extends JFrame implements View{
@@ -16,6 +17,7 @@ public class MainWindowView extends JFrame implements View{
     private JPanel panelController = new JPanel();
     private CardLayout layout = new CardLayout();
     private MainController mainController;
+    private View currentView;
 
     public MainWindowView(MainController mainController){
         this.mainController = mainController;
@@ -31,8 +33,10 @@ public class MainWindowView extends JFrame implements View{
         this.setVisible(true);
     }
 
-    public void mainViewLoop(){
-        repaint();
+    @Override
+    public void tick()
+    {
+        this.currentView.tick();
     }
 
     public void switchScreenTo(GameStateType gameStateType)
@@ -45,6 +49,7 @@ public class MainWindowView extends JFrame implements View{
                 {
                     panelController.add(sillyCatGameView, "game");
                 }
+                currentView = sillyCatGameView;
                 layout.show(panelController,"game");
                 break;
 
@@ -54,6 +59,7 @@ public class MainWindowView extends JFrame implements View{
                 {
                     panelController.add(menuView, "menu");
                 }
+                currentView = menuView;
                 layout.show(panelController,"menu");
                 break;
 

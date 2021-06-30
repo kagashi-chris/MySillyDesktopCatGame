@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SillyCatGameView extends JPanel implements ActionListener, View{
@@ -36,6 +37,7 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     private static SillyCatGameView instance;
 
     private Cat selectedCat = null;
+    private GameState gameState;
 
     private final int CAT_DISPLAY_IMAGE_WIDTH = 128;
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 128;
@@ -57,7 +59,10 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     //of the animation, else it resets the frame count back to 0 and play the request animation.
     private SillyCatGameView(MainController mainController)
     {
+        System.out.println("Constructor called");
         this.mainController = mainController;
+        this.gameState = mainController.getGameState();
+        System.out.println("main controller returned " +this.gameState);
 
         menuButton = new JButton("Menu");
         menuButton.setBounds(20,20, 100,20);
@@ -82,8 +87,9 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         buttonList.add(menuButton);
 
         catLabel = new JLabel(new ImageIcon());
-        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
         catAnimatedSprite = SpriteUtil.createCatAnimatedSprite(catSpriteSheetPathTable);
+        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+
         initView();
         mainController.subscribe(this);
     }
@@ -91,6 +97,7 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
 
     public static synchronized SillyCatGameView getInstance(MainController mainController)
     {
+        System.out.println("Getting silly cat game view instance");
         if(instance == null)
         {
             instance = new SillyCatGameView(mainController);
@@ -110,14 +117,22 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     }
 
     @Override
+    public void tick()
+    {
+        System.out.println(gameState);
+        System.out.println("tick called");
+        List<Cat> catList = gameState.getCatList();
+        for(Cat cat:catList)
+        {
+            catAnimatedSprite.draw(catLabel,cat);
+        }
+        selectedCat = catList.get(0);
+    }
+
+    @Override
     public void updateView(GameState gameState)
     {
-//        List<Cat> catList = gameState.getCatList();
-//        for(Cat cat:catList)
-//        {
-//            catAnimatedSprite.draw(catLabel,cat);
-//        }
-//        selectedCat = catList.get(0);
+        this.gameState = gameState;
     }
 
     @Override

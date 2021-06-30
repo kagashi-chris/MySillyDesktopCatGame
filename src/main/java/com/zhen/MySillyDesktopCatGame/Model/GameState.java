@@ -2,6 +2,7 @@ package com.zhen.MySillyDesktopCatGame.Model;
 
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
@@ -15,6 +16,9 @@ public class GameState {
 
     public GameState(GameStateType gameStateType) {
         this.gameStateType = gameStateType;
+        this.catList = new ArrayList<>();
+        Cat cat = new Cat();
+        catList.add(cat);
     }
 
     public GameStateType getGameStateType() {

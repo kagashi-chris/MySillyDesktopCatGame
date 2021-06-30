@@ -14,6 +14,11 @@ public class MinigameView implements View{
     }
 
     @Override
+    public void tick() {
+
+    }
+
+    @Override
     public void updateView(GameState gameState) {
     }
 }

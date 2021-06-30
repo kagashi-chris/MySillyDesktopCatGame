@@ -28,13 +28,15 @@ public class CatAnimatedSprite extends AnimatedSprite{
         {
             currentAnimationFrame = 0;
         }
+        System.out.println("Current animation frame: " + currentAnimationFrame);
         spriteComponent.setIcon(catAnimationTable.get(cat.getCatStateType())[currentAnimationFrame]);
+        lastDrawnAnimation = cat.getCatStateType();
     }
 
     public void incrementAndWrap(Icon[] icons)
     {
         currentAnimationFrame++;
-        if(currentAnimationFrame > icons.length)
+        if(currentAnimationFrame > icons.length - 1)
         {
             currentAnimationFrame = 0;
         }
