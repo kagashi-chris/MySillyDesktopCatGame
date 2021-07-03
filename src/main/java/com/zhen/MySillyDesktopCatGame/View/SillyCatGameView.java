@@ -127,6 +127,10 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
             catAnimatedSprite.draw(catLabel,cat);
         }
         selectedCat = catList.get(0);
+        for (JButton button: buttonList)
+        {
+            button.setEnabled(!gameState.isButtonsDisabled());
+        }
     }
 
     @Override

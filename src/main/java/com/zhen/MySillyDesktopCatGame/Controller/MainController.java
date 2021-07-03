@@ -22,8 +22,6 @@ public class MainController implements Runnable{
     private SillyCatGameController sillyCatGameController;
     private MenuController menuController;
     private MinigameController minigameController;
-    private AnimationController animationController;
-    private AnimationControllerInputs animationControllerInputs;
 
     private List<View> viewObservers = new CopyOnWriteArrayList<>();
 
@@ -36,8 +34,7 @@ public class MainController implements Runnable{
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
-        animationController = new AnimationController(this);
-        this.animationControllerInputs = new AnimationControllerInputs(false, 0, gameState.getCatList().get(0));
+
 
         start();
     }
@@ -95,8 +92,9 @@ public class MainController implements Runnable{
 
     public void tick()
     {
-        animationController.nextState(animationControllerInputs);
+        sillyCatGameController.tick();
         mainWindowView.tick();
+        notifyObservers(gameState);
     }
 
     public synchronized void performAction(Action action)
@@ -163,10 +161,6 @@ public class MainController implements Runnable{
         return sillyCatGameController;
     }
 
-    public AnimationController getAnimationController()
-    {
-        return animationController;
-    }
 
 
 }

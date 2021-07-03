@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 public class Cat {
 
-    private boolean facingRight = true;
     private int fullness;
     private int happiness;
     private CatStateType catStateType;
@@ -67,18 +66,10 @@ public class Cat {
         this.catLastUpdated = catLastUpdated;
     }
 
-    public boolean isFacingRight() {
-        return facingRight;
-    }
-
-    public void setFacingRight(boolean facingRight) {
-        this.facingRight = facingRight;
-    }
 
     @Override
     public String toString() {
         return "Cat{" +
-                "facingRight=" + facingRight +
                 ", fullness=" + fullness +
                 ", happiness=" + happiness +
                 ", catStateType=" + catStateType +

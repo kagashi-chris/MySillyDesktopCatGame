@@ -1,8 +1,9 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
+import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 
-public class AnimationController {
+public class CatBehaviorStateMachine {
 
     private MainController mainController;
     private State currentState;
@@ -13,28 +14,33 @@ public class AnimationController {
     private State dying = new Dying();
     private State dead = new Dead();
 
-    public AnimationController(MainController mainController) {
+    public CatBehaviorStateMachine(MainController mainController) {
         this.mainController = mainController;
         this.currentState = new IdleLeft();
 
     }
 
-    public void nextState(AnimationControllerInputs inputs)
+    public void nextState(CatBehaviorStateMachineInputs inputs)
     {
         this.currentState = this.currentState.nextState(inputs);
         System.out.println("Changing state to " + this.currentState.getClass().getName());
     }
 
+    public State getCurrentState()
+    {
+        return currentState;
+    }
 
     interface State{
 
-        State nextState(AnimationControllerInputs inputs);
+        State nextState(CatBehaviorStateMachineInputs inputs);
+        CatStateType getCatStateType();
     }
 
     class IdleLeft implements State{
 
         @Override
-        public State nextState(AnimationControllerInputs inputs) {
+        public State nextState(CatBehaviorStateMachineInputs inputs) {
             if(inputs.isFeedButtonPressed())
             {
                 return eating;
@@ -55,12 +61,17 @@ public class AnimationController {
             {
                 return idleLeft;
             }
+        }
+
+        @Override
+        public CatStateType getCatStateType() {
+            return CatStateType.IDLE_LEFT;
         }
     }
 
     class IdleRight implements State{
         @Override
-        public State nextState(AnimationControllerInputs inputs) {
+        public State nextState(CatBehaviorStateMachineInputs inputs) {
             if(inputs.isFeedButtonPressed())
             {
                 return eating;
@@ -82,19 +93,20 @@ public class AnimationController {
                 return idleRight;
             }
         }
+
+        @Override
+        public CatStateType getCatStateType() {
+            return CatStateType.IDLE_RIGHT;
+        }
     }
 
     class Eating implements State{
         @Override
-        public State nextState(AnimationControllerInputs inputs) {
+        public State nextState(CatBehaviorStateMachineInputs inputs) {
 
-            if(inputs.getEatingTimer() <= 0 && inputs.getCat().isFacingRight())
+            if(inputs.getEatingTimer() <= 0)
             {
                 return idleRight;
-            }
-            else if(inputs.getEatingTimer() <= 0 && !inputs.getCat().isFacingRight())
-            {
-                return idleLeft;
             }
             else if(inputs.getCat().getFullness() <= 30000)
             {
@@ -106,11 +118,16 @@ public class AnimationController {
             }
 
         }
+
+        @Override
+        public CatStateType getCatStateType() {
+            return CatStateType.EATING;
+        }
     }
 
     class Dying implements State{
         @Override
-        public State nextState(AnimationControllerInputs inputs) {
+        public State nextState(CatBehaviorStateMachineInputs inputs) {
 
             if(inputs.feedButtonPressed)
             {
@@ -124,31 +141,39 @@ public class AnimationController {
             {
                 return dying;
             }
+        }
 
+        @Override
+        public CatStateType getCatStateType() {
+            return CatStateType.DYING;
         }
     }
 
     class Dead implements State{
         @Override
-        public State nextState(AnimationControllerInputs inputs) {
+        public State nextState(CatBehaviorStateMachineInputs inputs) {
             return dead;
         }
+
+        @Override
+        public CatStateType getCatStateType() {
+            return CatStateType.DEAD;
+        }
     }
-
-
 }
 
+ class CatBehaviorStateMachineInputs {
 
- class AnimationControllerInputs{
-
+    boolean directionRandomlyChanged;
     boolean feedButtonPressed;
     int eatingTimer;
     Cat cat;
 
-    public AnimationControllerInputs(boolean feedButtonPressed, int eatingTimer, Cat cat) {
+    public CatBehaviorStateMachineInputs(boolean feedButtonPressed, int eatingTimer, Cat cat, boolean directionRandomlyChanged) {
         this.feedButtonPressed = feedButtonPressed;
         this.eatingTimer = eatingTimer;
         this.cat = cat;
+        this.directionRandomlyChanged = directionRandomlyChanged;
     }
 
     public Cat getCat() {
@@ -157,11 +182,6 @@ public class AnimationController {
 
     public void setCat(Cat cat) {
         this.cat = cat;
-    }
-
-    public boolean isDirectionRandomlyChanged()
-    {
-        return (Math.random()*10)+1 == 1;
     }
 
     public boolean isFeedButtonPressed() {
@@ -179,7 +199,25 @@ public class AnimationController {
     public void setEatingTimer(int eatingTimer) {
         this.eatingTimer = eatingTimer;
     }
-}
+
+     public boolean isDirectionRandomlyChanged() {
+         return directionRandomlyChanged;
+     }
+
+     public void setDirectionRandomlyChanged(boolean directionRandomlyChanged) {
+         this.directionRandomlyChanged = directionRandomlyChanged;
+     }
+
+     @Override
+     public String toString() {
+         return "CatBehaviorStateMachineInputs{" +
+                 "directionRandomlyChanged=" + directionRandomlyChanged +
+                 ", feedButtonPressed=" + feedButtonPressed +
+                 ", eatingTimer=" + eatingTimer +
+                 ", cat=" + cat +
+                 '}';
+     }
+ }
 
 
 

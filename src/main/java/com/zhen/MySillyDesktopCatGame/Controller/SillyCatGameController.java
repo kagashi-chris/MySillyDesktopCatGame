@@ -11,9 +11,20 @@ import java.time.temporal.ChronoUnit;
 public class SillyCatGameController{
 
     private MainController mainController;
+    private CatBehaviorStateMachine catBehaviorStateMachine;
+    private CatBehaviorStateMachineInputs catBehaviorStateMachineInputs;
+    private boolean feedButtonPressed;
+    private int eatingTimer = 0;
 
     public SillyCatGameController(MainController mainController) {
         this.mainController = mainController;
+        catBehaviorStateMachine = new CatBehaviorStateMachine(mainController);
+        this.catBehaviorStateMachineInputs = new CatBehaviorStateMachineInputs(
+                feedButtonPressed,
+                eatingTimer,
+                mainController.getGameState().getCatList().get(0),
+                false
+        );
     }
 
     public void handleFeedCat(FeedAction action)
@@ -22,7 +33,8 @@ public class SillyCatGameController{
         cat.setFullness(cat.getFullness()+30000);
         cat.setCatStateType(CatStateType.EATING);
         System.out.println(cat.getFullness());
-        mainController.getGameState().setButtonsDisabled(true);
+        feedButtonPressed = true;
+        eatingTimer = 6;
     }
 
     //TODO debug get rid after
@@ -43,27 +55,57 @@ public class SillyCatGameController{
     }
 
     //cat loses 1point of hunger every second
-    public void catDecayHunger(Cat cat)
+    private void catDecayHunger(Cat cat)
     {
         cat.setFullness(cat.getFullness()-1);
         System.out.println("Current Hunger Value After Decay: " + cat.getFullness());
     }
 
-    public void updateCatState(Cat cat)
+    private void decayEatingTimer()
     {
-        if(cat.getFullness()>30000 && !cat.getCatStateType().equals(CatStateType.EATING))
+        if(eatingTimer > 0)
         {
-            cat.setCatStateType(CatStateType.IDLE_LEFT);
+            eatingTimer--;
         }
-        else if(cat.getFullness()<=30000 && cat.getFullness() > 0 && !cat.getCatStateType().equals(CatStateType.EATING))
+    }
+
+    private void resetButtons()
+    {
+        feedButtonPressed = false;
+    }
+
+    public void tick()
+    {
+        //this is the default stuff that happens every tick
+        catDecayHunger(mainController.getGameState().getCatList().get(0));
+        decayEatingTimer();
+        //determine inputs
+        catBehaviorStateMachineInputs.setFeedButtonPressed(feedButtonPressed);
+        catBehaviorStateMachineInputs.setEatingTimer(eatingTimer);
+        catBehaviorStateMachineInputs.setCat(mainController.getGameState().getCatList().get(0));
+        catBehaviorStateMachineInputs.setDirectionRandomlyChanged(determineDirectionRandomlyChanged());
+        System.out.println(catBehaviorStateMachineInputs.toString());
+
+        //determine next state
+        catBehaviorStateMachine.nextState(catBehaviorStateMachineInputs);
+        CatBehaviorStateMachine.State catState = catBehaviorStateMachine.getCurrentState();
+
+        //determine effects of new state
+        mainController.getGameState().getCatList().get(0).setCatStateType(catState.getCatStateType());
+        resetButtons();
+        if(catState.getCatStateType() == CatStateType.EATING)
         {
-            cat.setCatStateType(CatStateType.DYING);
+            mainController.getGameState().setButtonsDisabled(true);
         }
-        else if(cat.getFullness()<=0)
+        else
         {
-            cat.setCatStateType(CatStateType.DEAD);
+            mainController.getGameState().setButtonsDisabled(false);
         }
-        System.out.println(cat.getCatStateType());
+    }
+
+    public boolean determineDirectionRandomlyChanged()
+    {
+        return (int)(Math.random()*3)+1 == 1;
     }
 
     public void initCatState(Cat cat)
