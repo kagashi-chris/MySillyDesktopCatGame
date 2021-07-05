@@ -34,8 +34,6 @@ public class MainController implements Runnable{
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
-
-
         start();
     }
 

@@ -90,6 +90,8 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         catAnimatedSprite = SpriteUtil.createCatAnimatedSprite(catSpriteSheetPathTable);
         catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
 
+        JPanel miniGamePanel = new JPanel();
+
         initView();
         mainController.subscribe(this);
     }
