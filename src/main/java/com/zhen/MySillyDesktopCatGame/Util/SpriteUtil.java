@@ -1,7 +1,9 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
+import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
 import com.zhen.MySillyDesktopCatGame.View.CatAnimatedSprite;
+import com.zhen.MySillyDesktopCatGame.View.RatAnimatedSprite;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -63,6 +65,23 @@ public class SpriteUtil {
         }
         CatAnimatedSprite catAnimatedSprite = new CatAnimatedSprite(catAnimationTable);
         return catAnimatedSprite;
+    }
+
+    public static RatAnimatedSprite createRatAnimatedSprite(Map<RatStateType, AnimationData> ratSpriteSheetPathTable)
+    {
+        Map<RatStateType, Icon[]> ratAnimationTable = new HashMap<>();
+        for(Map.Entry<RatStateType, AnimationData> entry: ratSpriteSheetPathTable.entrySet())
+        {
+            ratAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
+                    entry.getValue().getSpriteSheetPath(),
+                    entry.getValue().getNumAnimationFrames(),
+                    entry.getValue().getPixelWidth(),
+                    entry.getValue().getPixelHeight(),
+                    entry.getValue().getScaleFactor()
+            ));
+        }
+        RatAnimatedSprite ratAnimatedSprite = new RatAnimatedSprite(ratAnimationTable);
+        return ratAnimatedSprite;
     }
 
     public static class AnimationData{

@@ -22,6 +22,10 @@ public class MainController implements Runnable{
     private SillyCatGameController sillyCatGameController;
     private MenuController menuController;
     private MinigameController minigameController;
+    double interpolation = 0;
+    final int TICKS_PER_SECOND = 25;
+    final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+    final int MAX_FRAMESKIP = 5;
 
     private List<View> viewObservers = new CopyOnWriteArrayList<>();
 
@@ -59,38 +63,30 @@ public class MainController implements Runnable{
 
     @Override
     public void run() {
-        long lastTime = System.nanoTime();
-        long timer = System.currentTimeMillis();
-        double delta = 0.0;
-        double ns = 1000000000.0/60.0;
-        int frames = 0;
-        int ticks = 0;
-        while (programRunning)
-        {
-            long now = System.nanoTime();
-            delta+=(now-lastTime)/ns;
-            lastTime = now;
-            while(delta>=1)
-            {
+        double next_game_tick = System.currentTimeMillis();
+        int loops;
 
-                ticks++;
-                delta--;
-            }
-            frames++;
-            if(System.currentTimeMillis()-timer>1000)
-            {
+        while (true) {
+            loops = 0;
+            while (System.currentTimeMillis() > next_game_tick
+                    && loops < MAX_FRAMESKIP) {
+
                 tick();
-                timer+=1000;
-//                System.out.println(frames + " Frames Per Second " + ticks + " Updates Per Second");
-                frames = 0;
-                ticks = 0;
+
+                next_game_tick += SKIP_TICKS;
+                loops++;
             }
+
+            interpolation = (System.currentTimeMillis() + SKIP_TICKS - next_game_tick
+                    / (double) SKIP_TICKS);
+//            display_game(interpolation);
         }
     }
 
     public void tick()
     {
         sillyCatGameController.tick();
+        minigameController.tick();
         mainWindowView.tick();
         notifyObservers(gameState);
     }

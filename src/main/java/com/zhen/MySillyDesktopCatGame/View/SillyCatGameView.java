@@ -52,6 +52,8 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         put(CatStateType.IDLE_RIGHT, new SpriteUtil.AnimationData("CatIdleRight.png", 2,32,32,4));
     }};
 
+    private int tickSkipCounter = 0;
+
     //this class manages the display of Game elements within the frame. it constructs the buttons/graphics.
     //Action listeners are placed on the buttons so view controller and/or cat controller can be notifed when
     //certain buttons are pressed. The animation of the cat changes on a timer. Every one second the timer will call
@@ -121,6 +123,8 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     @Override
     public void tick()
     {
+        if(tickSkipCounter++ < 30)return;
+        tickSkipCounter = 0;
         System.out.println(gameState);
         System.out.println("tick called");
         List<Cat> catList = gameState.getCatList();

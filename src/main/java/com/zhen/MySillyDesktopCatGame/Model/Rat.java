@@ -1,20 +1,25 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
 import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
+import com.zhen.MySillyDesktopCatGame.Type.RatType;
 
-public class Rat {
+public abstract class Rat {
 
     private int hp;
     private int speed;
     private RatStateType ratStateType;
+    private RatType ratType;
     private int x,y;
+    private int id;
 
 
-    public Rat(int hp, int speed, int x, int y) {
+    public Rat(RatType ratType, int hp, int speed, int x, int y, int id) {
+        this.ratType = ratType;
         this.hp = hp;
         this.speed = speed;
         this.x = x;
         this.y = y;
+        this.id = id;
         ratStateType = RatStateType.RUNNING;
     }
 
@@ -56,5 +61,34 @@ public class Rat {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public RatType getRatType() {
+        return ratType;
+    }
+
+    public void setRatType(RatType ratType) {
+        this.ratType = ratType;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Rat{" +
+                "hp=" + hp +
+                ", speed=" + speed +
+                ", ratStateType=" + ratStateType +
+                ", ratType=" + ratType +
+                ", x=" + x +
+                ", y=" + y +
+                ", id=" + id +
+                '}';
     }
 }

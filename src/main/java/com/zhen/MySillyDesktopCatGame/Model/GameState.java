@@ -3,13 +3,16 @@ package com.zhen.MySillyDesktopCatGame.Model;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GameState {
 
     private boolean buttonsDisabled;
     private GameStateType gameStateType;
     private List<Cat> catList;
+    private Set<Rat> ratSet = new HashSet<>();
 
     public GameState(){
     }
@@ -43,6 +46,14 @@ public class GameState {
 
     public void setButtonsDisabled(boolean buttonsDisabled) {
         this.buttonsDisabled = buttonsDisabled;
+    }
+
+    public Set<Rat> getRatSet() {
+        return ratSet;
+    }
+
+    public void setRatSet(Set<Rat> ratSet) {
+        this.ratSet = ratSet;
     }
 
     @Override

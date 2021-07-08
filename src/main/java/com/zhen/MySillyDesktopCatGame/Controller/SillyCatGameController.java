@@ -15,6 +15,7 @@ public class SillyCatGameController{
     private CatBehaviorStateMachineInputs catBehaviorStateMachineInputs;
     private boolean feedButtonPressed;
     private int eatingTimer = 0;
+    private int tickSkipCounter = 0;
 
     public SillyCatGameController(MainController mainController) {
         this.mainController = mainController;
@@ -76,6 +77,8 @@ public class SillyCatGameController{
 
     public void tick()
     {
+        if(tickSkipCounter++ < 30)return;
+        tickSkipCounter = 0;
         //this is the default stuff that happens every tick
         catDecayHunger(mainController.getGameState().getCatList().get(0));
         decayEatingTimer();

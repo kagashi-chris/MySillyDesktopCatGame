@@ -1,43 +1,73 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
+import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MinigameController {
 
     private MainController mainController;
-    private RatFactory ratFactory;
+    private RatFactory normalRatFactory;
+    private RatFactory tankyRatFactory;
     private int ratId = 0;
-    private Map<Integer, Rat> ratMap = new HashMap<>();
 
     public MinigameController(MainController mainController) {
         this.mainController = mainController;
-        ratFactory = new RatFactory();
+        normalRatFactory = new NormalRatFactory();
+        tankyRatFactory = new TankyRatFactory();
+
     }
 
     public void randomlyCreateRat()
     {
         if((int)(Math.random()*3)+1 == 1)
         {
-            ratMap.put(ratId,ratFactory.createRat());
-            ratId++;
+            switch((int)Math.random()*2)
+            {
+                case 0:
+                    mainController.getGameState().getRatSet().add(normalRatFactory.createRat());
+                    System.out.println("Randomly created normal rat");
+                    break;
+                case 1:
+                    mainController.getGameState().getRatSet().add(tankyRatFactory.createRat());
+                    System.out.println("Randomly created tanky rat");
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
     private void animateRat()
     {
-        for(Map.Entry<Integer, Rat> ratEntry: ratMap.entrySet())
+        for(Rat rat: mainController.getGameState().getRatSet())
         {
-            ratEntry.getValue().setX(ratEntry.getValue().getX() - ratEntry.getValue().getSpeed());
+            rat.setX(rat.getX() - rat.getSpeed());
+        }
+    }
+
+    private void updateRat()
+    {
+        for(Rat rat: mainController.getGameState().getRatSet())
+        {
+            if(rat.getHp() <= 0)
+            {
+                mainController.getGameState().getRatSet().remove(rat);
+            }
         }
     }
 
     public void tick()
     {
+        updateRat();
         randomlyCreateRat();
         animateRat();
+    }
+
+    public void damageRat(Rat rat)
+    {
+        rat.setHp(rat.getHp()-1);
     }
 }
