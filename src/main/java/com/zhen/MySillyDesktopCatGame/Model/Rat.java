@@ -11,6 +11,7 @@ public abstract class Rat {
     private RatType ratType;
     private int x,y;
     private int id;
+    private boolean dead;
 
 
     public Rat(RatType ratType, int hp, int speed, int x, int y, int id) {
@@ -77,6 +78,14 @@ public abstract class Rat {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 
     @Override

@@ -59,7 +59,6 @@ public class SillyCatGameController{
     private void catDecayHunger(Cat cat)
     {
         cat.setFullness(cat.getFullness()-1);
-        System.out.println("Current Hunger Value After Decay: " + cat.getFullness());
     }
 
     private void decayEatingTimer()
@@ -87,7 +86,6 @@ public class SillyCatGameController{
         catBehaviorStateMachineInputs.setEatingTimer(eatingTimer);
         catBehaviorStateMachineInputs.setCat(mainController.getGameState().getCatList().get(0));
         catBehaviorStateMachineInputs.setDirectionRandomlyChanged(determineDirectionRandomlyChanged());
-        System.out.println(catBehaviorStateMachineInputs.toString());
 
         //determine next state
         catBehaviorStateMachine.nextState(catBehaviorStateMachineInputs);

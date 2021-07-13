@@ -1,5 +1,6 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
+import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ public class Cat {
     private int fullness;
     private int happiness;
     private CatStateType catStateType;
+    private CatMiniGameStateType catMiniGameStateType;
     private LocalDateTime catLastUpdated;
     private static Cat instance;
 
@@ -18,6 +20,7 @@ public class Cat {
         fullness = 50000;
         happiness = 50000;
         catStateType = CatStateType.IDLE_LEFT;
+        catMiniGameStateType = CatMiniGameStateType.IDLE;
         catLastUpdated = LocalDateTime.now();
     }
 
@@ -66,6 +69,13 @@ public class Cat {
         this.catLastUpdated = catLastUpdated;
     }
 
+    public CatMiniGameStateType getCatMiniGameStateType() {
+        return catMiniGameStateType;
+    }
+
+    public void setCatMiniGameStateType(CatMiniGameStateType catMiniGameStateType) {
+        this.catMiniGameStateType = catMiniGameStateType;
+    }
 
     @Override
     public String toString() {

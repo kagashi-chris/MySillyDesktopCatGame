@@ -23,7 +23,6 @@ public class CatBehaviorStateMachine {
     public void nextState(CatBehaviorStateMachineInputs inputs)
     {
         this.currentState = this.currentState.nextState(inputs);
-        System.out.println("Changing state to " + this.currentState.getClass().getName());
     }
 
     public State getCurrentState()

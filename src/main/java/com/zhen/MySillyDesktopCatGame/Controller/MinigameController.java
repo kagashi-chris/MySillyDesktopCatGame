@@ -1,9 +1,14 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
+import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MinigameController {
 
@@ -11,6 +16,7 @@ public class MinigameController {
     private RatFactory normalRatFactory;
     private RatFactory tankyRatFactory;
     private int ratId = 0;
+    private List<Rat> ratsToRemoveList = new ArrayList<>();
 
     public MinigameController(MainController mainController) {
         this.mainController = mainController;
@@ -21,17 +27,15 @@ public class MinigameController {
 
     public void randomlyCreateRat()
     {
-        if((int)(Math.random()*3)+1 == 1)
+        if((int)(Math.random()*20)+1 == 1)
         {
             switch((int)Math.random()*2)
             {
                 case 0:
                     mainController.getGameState().getRatSet().add(normalRatFactory.createRat());
-                    System.out.println("Randomly created normal rat");
                     break;
                 case 1:
                     mainController.getGameState().getRatSet().add(tankyRatFactory.createRat());
-                    System.out.println("Randomly created tanky rat");
                     break;
                 default:
                     break;
@@ -54,20 +58,28 @@ public class MinigameController {
         {
             if(rat.getHp() <= 0)
             {
-                mainController.getGameState().getRatSet().remove(rat);
+                ratsToRemoveList.add(rat);
             }
         }
+        for(Rat rat: ratsToRemoveList)
+        {
+            mainController.getGameState().getRatSet().remove(rat);
+        }
+        ratsToRemoveList.clear();
     }
 
     public void tick()
     {
-        updateRat();
-        randomlyCreateRat();
-        animateRat();
+        if(mainController.getGameState().getGameStateType() == GameStateType.MINIGAME_1)
+        {
+            updateRat();
+            randomlyCreateRat();
+            animateRat();
+        }
     }
 
-    public void damageRat(Rat rat)
+    public void handleDamageRat(DamageRatAction damageRatAction)
     {
-        rat.setHp(rat.getHp()-1);
+        damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-1);
     }
 }

@@ -101,7 +101,6 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
 
     public static synchronized SillyCatGameView getInstance(MainController mainController)
     {
-        System.out.println("Getting silly cat game view instance");
         if(instance == null)
         {
             instance = new SillyCatGameView(mainController);
@@ -125,8 +124,6 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     {
         if(tickSkipCounter++ < 30)return;
         tickSkipCounter = 0;
-        System.out.println(gameState);
-        System.out.println("tick called");
         List<Cat> catList = gameState.getCatList();
         for(Cat cat:catList)
         {

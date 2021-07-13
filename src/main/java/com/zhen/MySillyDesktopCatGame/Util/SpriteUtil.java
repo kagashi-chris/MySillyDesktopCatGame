@@ -1,8 +1,10 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
+import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
 import com.zhen.MySillyDesktopCatGame.View.CatAnimatedSprite;
+import com.zhen.MySillyDesktopCatGame.View.CatMiniGameAnimatedSprite;
 import com.zhen.MySillyDesktopCatGame.View.RatAnimatedSprite;
 
 import javax.imageio.ImageIO;
@@ -48,6 +50,22 @@ public class SpriteUtil {
         }
 
         return imageIcons;
+    }
+    public static CatMiniGameAnimatedSprite createCatMiniGameAnimatedSprite(Map<CatMiniGameStateType, AnimationData> catSpriteSheetPathTable)
+    {
+        Map<CatMiniGameStateType, Icon[]> catAnimationTable = new HashMap<>();
+        for(Map.Entry<CatMiniGameStateType, AnimationData> entry: catSpriteSheetPathTable.entrySet())
+        {
+            catAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
+                    entry.getValue().getSpriteSheetPath(),
+                    entry.getValue().getNumAnimationFrames(),
+                    entry.getValue().getPixelWidth(),
+                    entry.getValue().getPixelHeight(),
+                    entry.getValue().getScaleFactor()
+            ));
+        }
+        CatMiniGameAnimatedSprite catMiniGameAnimatedSprite = new CatMiniGameAnimatedSprite(catAnimationTable);
+        return catMiniGameAnimatedSprite;
     }
 
     public static CatAnimatedSprite createCatAnimatedSprite(Map<CatStateType, AnimationData> catSpriteSheetPathTable)

@@ -13,19 +13,17 @@ public class RatAnimatedSprite extends AnimatedSprite{
 
     private int currentAnimationFrame = 0;
     private RatStateType lastDrawnAnimation = null;
-    private JLabel jLabel;
 
     private Map<RatStateType, Icon[]> ratAnimationTable;
 
 
     public RatAnimatedSprite(Map<RatStateType, Icon[]> ratAnimationTable) {
+        super(new ImageIcon());
         this.ratAnimationTable = ratAnimationTable;
-        this.jLabel = new JLabel(new ImageIcon());
-
     }
 
     public void draw(Rat rat) {
-        jLabel.setBounds(rat.getX(), rat.getY(), 128,128);
+        this.setBounds(rat.getX(), rat.getY(), 128,128);
         if(lastDrawnAnimation == rat.getRatStateType())
         {
             incrementAndWrap(ratAnimationTable.get(rat.getRatStateType()));
@@ -34,8 +32,7 @@ public class RatAnimatedSprite extends AnimatedSprite{
         {
             currentAnimationFrame = 0;
         }
-        System.out.println("Current animation frame: " + currentAnimationFrame);
-        jLabel.setIcon(ratAnimationTable.get(rat.getRatStateType())[currentAnimationFrame]);
+        this.setIcon(ratAnimationTable.get(rat.getRatStateType())[currentAnimationFrame]);
         lastDrawnAnimation = rat.getRatStateType();
     }
 
@@ -49,6 +46,6 @@ public class RatAnimatedSprite extends AnimatedSprite{
     }
 
     public JLabel getjLabel() {
-        return jLabel;
+        return this;
     }
 }

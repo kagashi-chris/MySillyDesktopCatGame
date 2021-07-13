@@ -1,6 +1,7 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.Action;
+import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
@@ -93,7 +94,6 @@ public class MainController implements Runnable{
 
     public synchronized void performAction(Action action)
     {
-        System.out.println("Perform action called" );
         if (action instanceof SwitchScreenToAction)
         {
             handleSwitchScreenTo((SwitchScreenToAction)action);
@@ -105,6 +105,10 @@ public class MainController implements Runnable{
         else if (action instanceof MakeHungryDebugAction)
         {
             sillyCatGameController.handleMakeHungryDebugAction((MakeHungryDebugAction) action);
+        }
+        else if (action instanceof DamageRatAction)
+        {
+            minigameController.handleDamageRat((DamageRatAction)action);
         }
         notifyObservers(gameState);
     }
