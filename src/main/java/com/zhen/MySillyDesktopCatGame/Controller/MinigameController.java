@@ -64,8 +64,14 @@ public class MinigameController {
         for(Rat rat: ratsToRemoveList)
         {
             mainController.getGameState().getRatSet().remove(rat);
+            scorePoint();
         }
         ratsToRemoveList.clear();
+    }
+
+    private void scorePoint()
+    {
+        mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() + 1);
     }
 
     public void tick()

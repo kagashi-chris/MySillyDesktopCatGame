@@ -13,6 +13,7 @@ public class GameState {
     private GameStateType gameStateType;
     private List<Cat> catList;
     private Set<Rat> ratSet = new HashSet<>();
+    private int currentPoints = 0;
 
     public GameState(){
     }
@@ -54,6 +55,14 @@ public class GameState {
 
     public void setRatSet(Set<Rat> ratSet) {
         this.ratSet = ratSet;
+    }
+
+    public int getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(int currentPoints) {
+        this.currentPoints = currentPoints;
     }
 
     @Override

@@ -46,6 +46,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private CatMiniGameAnimatedSprite catMiniGameAnimatedSprite;
     private final int CAT_DISPLAY_IMAGE_WIDTH = 150;
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 150;
+    private JLabel scoreCounterLabel;
 
     private static Map<CatMiniGameStateType, SpriteUtil.AnimationData> catMiniGameSpriteSheetPathTable = new HashMap<>(){{
         put(CatMiniGameStateType.IDLE, new SpriteUtil.AnimationData("CatGunIdle.png",1,50,50,3));
@@ -59,6 +60,9 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         quitMiniGameButton = new JButton("Leave");
         quitMiniGameButton.setBounds(20,20, 100,20);
         quitMiniGameButton.addActionListener(this);
+
+        scoreCounterLabel = new JLabel("Current Score: " + mainController.getGameState().getCurrentPoints());
+        scoreCounterLabel.setBounds(300,20,100,20);
 
         ratAnimatedSprite = SpriteUtil.createRatAnimatedSprite(ratSpriteSheetPathTable);
 
@@ -75,6 +79,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         this.setBackground(Color.lightGray);
         this.add(quitMiniGameButton);
         this.add(catMiniGameLabel);
+        this.add(scoreCounterLabel);
         this.setLayout(null);
     }
 
@@ -115,6 +120,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         {
             ratEntry.getValue().draw(ratEntry.getKey());
         }
+        scoreCounterLabel.setText("Current Score: " + mainController.getGameState().getCurrentPoints());
         ratsToAdd.clear();
         ratsToDelete.clear();
     }
