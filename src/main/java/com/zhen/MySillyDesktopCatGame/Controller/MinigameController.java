@@ -86,6 +86,11 @@ public class MinigameController {
 
     public void handleDamageRat(DamageRatAction damageRatAction)
     {
-        damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-1);
+        damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-10);
+    }
+
+    public void handleToggleShop()
+    {
+
     }
 }

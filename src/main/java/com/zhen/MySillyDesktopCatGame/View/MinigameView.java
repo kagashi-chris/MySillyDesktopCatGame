@@ -48,6 +48,8 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 150;
     private JLabel scoreCounterLabel;
 
+    private JButton shopButton;
+
     private static Map<CatMiniGameStateType, SpriteUtil.AnimationData> catMiniGameSpriteSheetPathTable = new HashMap<>(){{
         put(CatMiniGameStateType.IDLE, new SpriteUtil.AnimationData("CatGunIdle.png",1,50,50,3));
         put(CatMiniGameStateType.SHOOTING, new SpriteUtil.AnimationData("CatGunFire.png",1,50,50,3));
@@ -61,6 +63,10 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         quitMiniGameButton.setBounds(20,20, 100,20);
         quitMiniGameButton.addActionListener(this);
 
+        shopButton = new JButton("Shop");
+        shopButton.setBounds(450,20,100,20);
+        shopButton.addActionListener(this);
+
         scoreCounterLabel = new JLabel("Current Score: " + mainController.getGameState().getCurrentPoints());
         scoreCounterLabel.setBounds(300,20,100,20);
 
@@ -70,6 +76,8 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         catMiniGameAnimatedSprite = SpriteUtil.createCatMiniGameAnimatedSprite(catMiniGameSpriteSheetPathTable);
         catMiniGameLabel.setBounds(50,250,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
 
+
+
         initView();
         mainController.subscribe(this);
     }
@@ -77,10 +85,16 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private void initView()
     {
         this.setBackground(Color.lightGray);
+        this.add(shopButton);
         this.add(quitMiniGameButton);
         this.add(catMiniGameLabel);
         this.add(scoreCounterLabel);
         this.setLayout(null);
+    }
+
+    private void toggleShop()
+    {
+
     }
 
     public static synchronized MinigameView getInstance(MainController mainController)
@@ -110,7 +124,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         for(Rat rat: ratsToDelete)
         {
             RatAnimatedSprite ratAnimatedSprite = ratToSpriteMap.get(rat);
-
+            ratToSpriteMap.get(rat).getjLabel().setVisible(false);
             ratToSpriteMap.remove(rat);
             spriteToRatMap.remove(ratAnimatedSprite);
             this.remove(ratAnimatedSprite.getjLabel());
@@ -142,10 +156,13 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         switch(e.getActionCommand())
         {
             case "Leave":
-                System.out.println("Leave PRESSED");
+                System.out.println("Leave Pressed");
                 mainController.performAction(new SwitchScreenToAction(GameStateType.SILLY_CAT_GAME));
                 break;
-
+            case "Shop":
+                System.out.println("Shop Pressed");
+                mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
+                break;
             default:
                 break;
         }

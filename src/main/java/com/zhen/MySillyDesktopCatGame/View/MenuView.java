@@ -50,13 +50,6 @@ public class MenuView extends JPanel implements View, MouseListener {
 
     public void initView()
     {
-//        try {
-//            titleImage = ImageIO.read(getClass().getClassLoader().getResource("MySillyDesktopCatTitle.png"));
-//            titleImage.getScaledInstance(300,300,1);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         this.setBackground(Color.LIGHT_GRAY);
         this.add(playButton);
         this.add(exitButton);

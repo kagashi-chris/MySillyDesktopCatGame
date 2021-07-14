@@ -18,6 +18,7 @@ public class MainWindowView extends JFrame implements View{
     private JPanel panelController = new JPanel();
     private CardLayout layout = new CardLayout();
     private MainController mainController;
+    private MiniGameShopView miniGameShopView;
     private View currentView;
 
     public MainWindowView(MainController mainController){
@@ -72,6 +73,16 @@ public class MainWindowView extends JFrame implements View{
                 }
                 currentView = minigameView;
                 layout.show(panelController,"miniGame");
+                break;
+
+            case SHOP:
+                miniGameShopView = MiniGameShopView.getInstance(mainController);
+                if(miniGameShopView.getParent() != panelController)
+                {
+                    panelController.add(miniGameShopView, "miniGameShop");
+                }
+                currentView = miniGameShopView;
+                layout.show(panelController,"miniGameShop");
                 break;
 
             default:

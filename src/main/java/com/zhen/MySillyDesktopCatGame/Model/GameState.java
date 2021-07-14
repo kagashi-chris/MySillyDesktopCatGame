@@ -70,7 +70,9 @@ public class GameState {
         return "GameState{" +
                 "buttonsDisabled=" + buttonsDisabled +
                 ", gameStateType=" + gameStateType +
-                ", cat=" + catList +
+                ", catList=" + catList +
+                ", ratSet=" + ratSet +
+                ", currentPoints=" + currentPoints +
                 '}';
     }
 }

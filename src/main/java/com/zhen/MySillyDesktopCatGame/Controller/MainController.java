@@ -1,6 +1,7 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.Action;
+import com.zhen.MySillyDesktopCatGame.Action.BuyItemAction;
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
@@ -23,6 +24,7 @@ public class MainController implements Runnable{
     private SillyCatGameController sillyCatGameController;
     private MenuController menuController;
     private MinigameController minigameController;
+    private MiniGameShopController miniGameShopController;
     double interpolation = 0;
     final int TICKS_PER_SECOND = 25;
     final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
@@ -39,6 +41,7 @@ public class MainController implements Runnable{
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
+        miniGameShopController = new MiniGameShopController(this);
         start();
     }
 
@@ -110,6 +113,12 @@ public class MainController implements Runnable{
         {
             minigameController.handleDamageRat((DamageRatAction)action);
         }
+        else if (action instanceof BuyItemAction)
+        {
+            miniGameShopController.buyItem((BuyItemAction) action);
+        }
+
+
         notifyObservers(gameState);
     }
 
