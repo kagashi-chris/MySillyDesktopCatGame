@@ -6,6 +6,7 @@ import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
@@ -116,6 +117,10 @@ public class MainController implements Runnable{
         else if (action instanceof BuyItemAction)
         {
             miniGameShopController.buyItem((BuyItemAction) action);
+        }
+        else if (action instanceof UseSpellAction)
+        {
+            minigameController.handleSpellUse((UseSpellAction) action);
         }
 
 

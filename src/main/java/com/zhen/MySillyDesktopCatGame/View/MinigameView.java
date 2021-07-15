@@ -2,6 +2,7 @@ package com.zhen.MySillyDesktopCatGame.View;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
@@ -9,6 +10,7 @@ import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
 
 import javax.swing.ImageIcon;
@@ -49,6 +51,10 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private JLabel scoreCounterLabel;
 
     private JButton shopButton;
+    private JButton spellSlot1;
+    private JButton spellSlot2;
+    private JButton spellSlot3;
+    private JButton spellSlot4;
 
     private static Map<CatMiniGameStateType, SpriteUtil.AnimationData> catMiniGameSpriteSheetPathTable = new HashMap<>(){{
         put(CatMiniGameStateType.IDLE, new SpriteUtil.AnimationData("CatGunIdle.png",1,50,50,3));
@@ -76,6 +82,25 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         catMiniGameAnimatedSprite = SpriteUtil.createCatMiniGameAnimatedSprite(catMiniGameSpriteSheetPathTable);
         catMiniGameLabel.setBounds(50,250,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
 
+        spellSlot1 = new JButton();
+        spellSlot1.setBounds(20,550,100,20);
+        spellSlot1.addActionListener(this);
+        spellSlot1.setText("Fireball");
+
+        spellSlot2 = new JButton();
+        spellSlot2.setBounds(150,550,100,20);
+        spellSlot2.addActionListener(this);
+        spellSlot2.setText("Lightning");
+
+        spellSlot3 = new JButton();
+        spellSlot3.setBounds(280,550,100,20);
+        spellSlot3.addActionListener(this);
+        spellSlot3.setText("Freeze");
+
+        spellSlot4 = new JButton();
+        spellSlot4.setBounds(410,550,100,20);
+        spellSlot4.addActionListener(this);
+
 
 
         initView();
@@ -89,12 +114,11 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         this.add(quitMiniGameButton);
         this.add(catMiniGameLabel);
         this.add(scoreCounterLabel);
+        this.add(spellSlot1);
+        this.add(spellSlot2);
+        this.add(spellSlot3);
+        this.add(spellSlot4);
         this.setLayout(null);
-    }
-
-    private void toggleShop()
-    {
-
     }
 
     public static synchronized MinigameView getInstance(MainController mainController)
@@ -162,6 +186,18 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
             case "Shop":
                 System.out.println("Shop Pressed");
                 mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
+                break;
+            case "Fireball":
+                System.out.println("Fireball Used");
+                mainController.performAction(new UseSpellAction(SpellType.FIREBALL));
+                break;
+            case "Freeze":
+                System.out.println("Freeze Used");
+                mainController.performAction(new UseSpellAction(SpellType.FREEZE));
+                break;
+            case "Lightning":
+                System.out.println("Lightning Used");
+                mainController.performAction(new UseSpellAction(SpellType.LIGHTNING));
                 break;
             default:
                 break;

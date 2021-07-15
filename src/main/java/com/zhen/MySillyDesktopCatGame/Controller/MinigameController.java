@@ -1,11 +1,13 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +91,22 @@ public class MinigameController {
         damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-10);
     }
 
-    public void handleToggleShop()
+    public void handleSpellUse(UseSpellAction useSpellAction)
     {
-
+        SpellType spellType = useSpellAction.getSpellType();
+        switch (spellType)
+        {
+            case FIREBALL:
+                System.out.println("FIREBALL!");
+                break;
+            case FREEZE:
+                System.out.println("FREEZE!");
+                break;
+            case LIGHTNING:
+                System.out.println("Lightning!");
+                break;
+            default:
+                break;
+        }
     }
 }
