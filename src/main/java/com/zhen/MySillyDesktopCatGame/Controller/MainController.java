@@ -26,6 +26,7 @@ public class MainController implements Runnable{
     private MenuController menuController;
     private MinigameController minigameController;
     private MiniGameShopController miniGameShopController;
+    private SpellController spellController;
     double interpolation = 0;
     final int TICKS_PER_SECOND = 25;
     final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
@@ -43,6 +44,7 @@ public class MainController implements Runnable{
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
         miniGameShopController = new MiniGameShopController(this);
+        spellController = new SpellController(this);
         start();
     }
 
@@ -116,6 +118,7 @@ public class MainController implements Runnable{
         }
         else if (action instanceof BuyItemAction)
         {
+            System.out.println("Performing Action BuyItem");
             miniGameShopController.buyItem((BuyItemAction) action);
         }
         else if (action instanceof UseSpellAction)
@@ -173,6 +176,7 @@ public class MainController implements Runnable{
         return sillyCatGameController;
     }
 
-
-
+    public SpellController getSpellController() {
+        return spellController;
+    }
 }

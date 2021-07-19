@@ -1,10 +1,13 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class GameState {
@@ -14,6 +17,7 @@ public class GameState {
     private List<Cat> catList;
     private Set<Rat> ratSet = new HashSet<>();
     private int currentPoints = 0;
+    private Map<SpellType, Spell> spellTypeToSpellMap = new HashMap<>();
 
     public GameState(){
     }
@@ -23,6 +27,14 @@ public class GameState {
         this.catList = new ArrayList<>();
         Cat cat = new Cat();
         catList.add(cat);
+
+        Spell fireball = new FireballSpell(10,15,150);
+        Spell freeze = new FreezeSpell(0,20,500);
+        Spell lightning = new LightningSpell(5,10,300);
+
+        spellTypeToSpellMap.put(SpellType.FIREBALL, fireball);
+        spellTypeToSpellMap.put(SpellType.LIGHTNING, lightning);
+        spellTypeToSpellMap.put(SpellType.FREEZE, freeze);
     }
 
     public GameStateType getGameStateType() {
@@ -63,6 +75,10 @@ public class GameState {
 
     public void setCurrentPoints(int currentPoints) {
         this.currentPoints = currentPoints;
+    }
+
+    public Map<SpellType, Spell> getSpellTypeToSpellMap() {
+        return spellTypeToSpellMap;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.zhen.MySillyDesktopCatGame.View;
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
+import com.zhen.MySillyDesktopCatGame.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
@@ -22,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +52,9 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 150;
     private JLabel scoreCounterLabel;
 
+    private Command[] spellCommands;
+    private List<JButton> spellButtonList = new ArrayList<>();
+
     private JButton shopButton;
     private JButton spellSlot1;
     private JButton spellSlot2;
@@ -64,6 +69,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     public MinigameView(MainController mainController) {
         this.mainController = mainController;
         this.gameState = mainController.getGameState();
+        spellCommands = new Command[mainController.getSpellController().getSpellCommand().length];
 
         quitMiniGameButton = new JButton("Leave");
         quitMiniGameButton.setBounds(20,20, 100,20);
@@ -85,23 +91,23 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         spellSlot1 = new JButton();
         spellSlot1.setBounds(20,550,100,20);
         spellSlot1.addActionListener(this);
-        spellSlot1.setText("Fireball");
 
         spellSlot2 = new JButton();
         spellSlot2.setBounds(150,550,100,20);
         spellSlot2.addActionListener(this);
-        spellSlot2.setText("Lightning");
 
         spellSlot3 = new JButton();
         spellSlot3.setBounds(280,550,100,20);
         spellSlot3.addActionListener(this);
-        spellSlot3.setText("Freeze");
 
         spellSlot4 = new JButton();
         spellSlot4.setBounds(410,550,100,20);
         spellSlot4.addActionListener(this);
 
-
+        spellButtonList.add(spellSlot1);
+        spellButtonList.add(spellSlot2);
+        spellButtonList.add(spellSlot3);
+        spellButtonList.add(spellSlot4);
 
         initView();
         mainController.subscribe(this);
@@ -133,6 +139,10 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     @Override
     public void tick() {
         List<Cat> catList = gameState.getCatList();
+        if(checkIfSpellSlotUpdated())
+        {
+            updateSpellSlots();
+        }
         for(Cat cat:catList)
         {
             catMiniGameAnimatedSprite.draw(catMiniGameLabel,cat);
@@ -161,6 +171,39 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         scoreCounterLabel.setText("Current Score: " + mainController.getGameState().getCurrentPoints());
         ratsToAdd.clear();
         ratsToDelete.clear();
+    }
+
+    private boolean checkIfSpellSlotUpdated()
+    {
+        Command[] tempSpellCommands = mainController.getSpellController().getSpellCommand();
+        boolean updated = false;
+        for(int i = 0; i < tempSpellCommands.length; i ++)
+        {
+            if(tempSpellCommands[i] != spellCommands[i])
+            {
+                spellCommands[i] = tempSpellCommands[i];
+                updated = true;
+            }
+        }
+        return updated;
+    }
+
+    private void updateSpellSlots()
+    {
+        System.out.println("Updating Spell Slots!");
+        for(int i = 0; i < spellCommands.length; i++)
+        {
+            if(spellCommands[i] == null)
+            {
+                System.out.println("index " + i + " is null");
+                spellButtonList.get(i).setText("");
+            }
+            else
+            {
+                System.out.println("Changing Name To: " + spellCommands[i].getCommandName());
+                spellButtonList.get(i).setText(spellCommands[i].getCommandName());
+            }
+        }
     }
 
     @Override
