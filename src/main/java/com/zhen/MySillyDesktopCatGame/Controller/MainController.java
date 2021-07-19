@@ -6,7 +6,7 @@ import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
-import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
@@ -121,9 +121,10 @@ public class MainController implements Runnable{
             System.out.println("Performing Action BuyItem");
             miniGameShopController.buyItem((BuyItemAction) action);
         }
-        else if (action instanceof UseSpellAction)
+
+        else if (action instanceof UseSpellOnSlotAction)
         {
-            minigameController.handleSpellUse((UseSpellAction) action);
+            minigameController.handleSpellSlotUse((UseSpellOnSlotAction) action);
         }
 
 

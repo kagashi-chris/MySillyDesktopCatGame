@@ -2,7 +2,7 @@ package com.zhen.MySillyDesktopCatGame.View;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
-import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
@@ -11,7 +11,7 @@ import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
-import com.zhen.MySillyDesktopCatGame.Type.SpellType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
 
 import javax.swing.ImageIcon;
@@ -220,31 +220,48 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(e.getActionCommand())
+
+        if(e.getActionCommand() == "Leave")
         {
-            case "Leave":
-                System.out.println("Leave Pressed");
-                mainController.performAction(new SwitchScreenToAction(GameStateType.SILLY_CAT_GAME));
-                break;
-            case "Shop":
-                System.out.println("Shop Pressed");
-                mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
-                break;
-            case "Fireball":
-                System.out.println("Fireball Used");
-                mainController.performAction(new UseSpellAction(SpellType.FIREBALL));
-                break;
-            case "Freeze":
-                System.out.println("Freeze Used");
-                mainController.performAction(new UseSpellAction(SpellType.FREEZE));
-                break;
-            case "Lightning":
-                System.out.println("Lightning Used");
-                mainController.performAction(new UseSpellAction(SpellType.LIGHTNING));
-                break;
-            default:
-                break;
+            System.out.println("Leave Pressed");
+            mainController.performAction(new SwitchScreenToAction(GameStateType.SILLY_CAT_GAME));
         }
+        else if(e.getActionCommand() == "Shop")
+        {
+            System.out.println("Shop Pressed");
+            mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
+        }
+        else if(spellButtonList.contains(e.getSource()))
+        {
+            System.out.println("Performing spell");
+            mainController.performAction(new UseSpellOnSlotAction(SpellSlotType.values()[spellButtonList.indexOf(e.getSource())]));
+            System.out.println(spellButtonList.indexOf(e.getSource()));
+        }
+//        switch(e.getActionCommand())
+//        {
+//            case "Leave":
+//                System.out.println("Leave Pressed");
+//                mainController.performAction(new SwitchScreenToAction(GameStateType.SILLY_CAT_GAME));
+//                break;
+//            case "Shop":
+//                System.out.println("Shop Pressed");
+//                mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
+//                break;
+//            case "Fireball":
+//                System.out.println("Fireball Used");
+//                mainController.performAction(new UseSpellAction(SpellType.FIREBALL));
+//                break;
+//            case "Freeze":
+//                System.out.println("Freeze Used");
+//                mainController.performAction(new UseSpellAction(SpellType.FREEZE));
+//                break;
+//            case "Lightning":
+//                System.out.println("Lightning Used");
+//                mainController.performAction(new UseSpellAction(SpellType.LIGHTNING));
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     @Override

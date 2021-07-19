@@ -12,7 +12,7 @@ public class FireballSpellCommand implements Command{
 
     @Override
     public void execute() {
-
+        System.out.println("FIREBALLL!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     @Override

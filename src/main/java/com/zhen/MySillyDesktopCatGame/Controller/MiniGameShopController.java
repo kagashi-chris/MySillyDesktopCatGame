@@ -33,6 +33,7 @@ public class MiniGameShopController {
                     {
                         System.out.println(mainController.getSpellController().getSpellCommand()[0]);
                         mainController.getSpellController().setSpellCommand(checkForEmptySpellSlot(), new FireballSpellCommand());
+                        mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() - mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost());
                         System.out.println(mainController.getSpellController().getSpellCommand()[0]);
                     }
                 }

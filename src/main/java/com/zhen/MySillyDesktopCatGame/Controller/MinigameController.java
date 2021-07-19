@@ -1,13 +1,14 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
-import com.zhen.MySillyDesktopCatGame.Action.UseSpellAction;
+import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
+import com.zhen.MySillyDesktopCatGame.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
-import com.zhen.MySillyDesktopCatGame.Type.SpellType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,22 +92,37 @@ public class MinigameController {
         damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-10);
     }
 
-    public void handleSpellUse(UseSpellAction useSpellAction)
+    public void handleSpellSlotUse(UseSpellOnSlotAction useSpellOnSlotAction)
     {
-        SpellType spellType = useSpellAction.getSpellType();
-        switch (spellType)
+        SpellSlotType spellSlotType = useSpellOnSlotAction.getSpellSlotType();
+        switch (spellSlotType)
         {
-            case FIREBALL:
-                System.out.println("FIREBALL!");
+            case SPELLSLOT1:
+                System.out.println("USING SPELL ON SLOT1");
+                UseUpSpell(spellSlotType);
                 break;
-            case FREEZE:
-                System.out.println("FREEZE!");
+            case SPELLSLOT2:
+                System.out.println("USING SPELL ON SLOT2");
                 break;
-            case LIGHTNING:
-                System.out.println("Lightning!");
+            case SPELLSLOT3:
+                System.out.println("USING SPELL ON SLOT3");
+                break;
+            case SPELLSLOT4:
+                System.out.println("USING SPELL ON SLOT4");
                 break;
             default:
                 break;
         }
+    }
+
+    private void UseUpSpell(SpellSlotType spellSlotType)
+    {
+        int index = SpellSlotType.valueOf(spellSlotType.toString()).ordinal();
+        Command spell = mainController.getSpellController().getSpellCommand()[index];
+        if(spell != null)
+        {
+            spell.execute();
+        }
+        mainController.getSpellController().getSpellCommand()[index] = null;
     }
 }
