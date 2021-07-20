@@ -1,4 +1,4 @@
-package com.zhen.MySillyDesktopCatGame.Command;
+package com.zhen.MySillyDesktopCatGame.Controller.Command;
 
 public interface Command {
 

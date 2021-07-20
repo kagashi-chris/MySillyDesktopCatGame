@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class GameState {
+public class GameState{
 
     private boolean buttonsDisabled;
     private GameStateType gameStateType;
@@ -18,6 +18,7 @@ public class GameState {
     private Set<Rat> ratSet = new HashSet<>();
     private int currentPoints = 0;
     private Map<SpellType, Spell> spellTypeToSpellMap = new HashMap<>();
+    private List<Observer> observerList = new ArrayList<>();
 
     public GameState(){
     }

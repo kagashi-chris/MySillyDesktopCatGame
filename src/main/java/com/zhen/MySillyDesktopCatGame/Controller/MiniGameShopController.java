@@ -1,8 +1,8 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.BuyItemAction;
-import com.zhen.MySillyDesktopCatGame.Command.Command;
-import com.zhen.MySillyDesktopCatGame.Command.FireballSpellCommand;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.FireballSpellCommand;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
@@ -31,8 +31,7 @@ public class MiniGameShopController {
                     }
                     else
                     {
-                        System.out.println(mainController.getSpellController().getSpellCommand()[0]);
-                        mainController.getSpellController().setSpellCommand(checkForEmptySpellSlot(), new FireballSpellCommand());
+                        mainController.getSpellController().setSpellCommand(checkForEmptySpellSlot(), new FireballSpellCommand(mainController.getGameState()));
                         mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() - mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost());
                         System.out.println(mainController.getSpellController().getSpellCommand()[0]);
                     }

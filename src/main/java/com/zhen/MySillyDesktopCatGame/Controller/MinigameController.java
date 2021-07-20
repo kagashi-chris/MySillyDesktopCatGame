@@ -2,10 +2,11 @@ package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
-import com.zhen.MySillyDesktopCatGame.Command.Command;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
+import com.zhen.MySillyDesktopCatGame.Model.Observer;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
@@ -13,13 +14,14 @@ import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MinigameController {
+public class MinigameController{
 
     private MainController mainController;
     private RatFactory normalRatFactory;
     private RatFactory tankyRatFactory;
     private int ratId = 0;
     private List<Rat> ratsToRemoveList = new ArrayList<>();
+    private List<Observer> observerList = new ArrayList<>();
 
     public MinigameController(MainController mainController) {
         this.mainController = mainController;
@@ -103,12 +105,15 @@ public class MinigameController {
                 break;
             case SPELLSLOT2:
                 System.out.println("USING SPELL ON SLOT2");
+                UseUpSpell(spellSlotType);
                 break;
             case SPELLSLOT3:
                 System.out.println("USING SPELL ON SLOT3");
+                UseUpSpell(spellSlotType);
                 break;
             case SPELLSLOT4:
                 System.out.println("USING SPELL ON SLOT4");
+                UseUpSpell(spellSlotType);
                 break;
             default:
                 break;

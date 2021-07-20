@@ -7,6 +7,7 @@ import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.SpellManager;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
@@ -26,7 +27,7 @@ public class MainController implements Runnable{
     private MenuController menuController;
     private MinigameController minigameController;
     private MiniGameShopController miniGameShopController;
-    private SpellController spellController;
+    private SpellManager spellManager;
     double interpolation = 0;
     final int TICKS_PER_SECOND = 25;
     final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
@@ -44,7 +45,7 @@ public class MainController implements Runnable{
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
         miniGameShopController = new MiniGameShopController(this);
-        spellController = new SpellController(this);
+        spellManager = new SpellManager(this);
         start();
     }
 
@@ -121,7 +122,6 @@ public class MainController implements Runnable{
             System.out.println("Performing Action BuyItem");
             miniGameShopController.buyItem((BuyItemAction) action);
         }
-
         else if (action instanceof UseSpellOnSlotAction)
         {
             minigameController.handleSpellSlotUse((UseSpellOnSlotAction) action);
@@ -155,7 +155,7 @@ public class MainController implements Runnable{
         gameState.setGameStateType(action.getGameStateType());
     }
 
-    public GameState getGameState()
+    protected GameState getGameState()
     {
         return gameState;
     }
@@ -177,7 +177,7 @@ public class MainController implements Runnable{
         return sillyCatGameController;
     }
 
-    public SpellController getSpellController() {
-        return spellController;
+    public SpellManager getSpellController() {
+        return spellManager;
     }
 }

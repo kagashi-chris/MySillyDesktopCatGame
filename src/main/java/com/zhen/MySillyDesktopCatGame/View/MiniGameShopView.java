@@ -27,13 +27,13 @@ public class MiniGameShopView extends JPanel implements View, ActionListener {
 
     public MiniGameShopView(MainController mainController) {
         this.mainController = mainController;
-        this.gameState = mainController.getGameState();
+        mainController.subscribe(this);
 
         returnToGame = new JButton("Return");
         returnToGame.setBounds(20,20, 100,20);
         returnToGame.addActionListener(this);
 
-        scoreCounterLabel = new JLabel("Current Score: " + mainController.getGameState().getCurrentPoints());
+        scoreCounterLabel = new JLabel("Current Score: " + gameState.getCurrentPoints());
         scoreCounterLabel.setBounds(300,20,100,20);
 
         buyFireBall = new JButton("Fireball");
@@ -48,9 +48,8 @@ public class MiniGameShopView extends JPanel implements View, ActionListener {
         buyFreeze.setBounds(20,180,100,20);
         buyFreeze.addActionListener(this);
 
-
         initView();
-        mainController.subscribe(this);
+
     }
 
     private void initView()
@@ -74,12 +73,12 @@ public class MiniGameShopView extends JPanel implements View, ActionListener {
 
     @Override
     public void tick() {
-        scoreCounterLabel.setText("Current Score: " + mainController.getGameState().getCurrentPoints());
+        scoreCounterLabel.setText("Current Score: " + gameState.getCurrentPoints());
     }
 
     @Override
     public void updateView(GameState gameState) {
-
+        this.gameState = gameState;
     }
 
     @Override

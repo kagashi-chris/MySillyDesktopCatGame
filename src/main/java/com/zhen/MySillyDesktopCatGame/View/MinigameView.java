@@ -3,7 +3,7 @@ package com.zhen.MySillyDesktopCatGame.View;
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
-import com.zhen.MySillyDesktopCatGame.Command.Command;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
@@ -68,7 +68,8 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
 
     public MinigameView(MainController mainController) {
         this.mainController = mainController;
-        this.gameState = mainController.getGameState();
+        mainController.subscribe(this);
+
         spellCommands = new Command[mainController.getSpellController().getSpellCommand().length];
 
         quitMiniGameButton = new JButton("Leave");
@@ -79,7 +80,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         shopButton.setBounds(450,20,100,20);
         shopButton.addActionListener(this);
 
-        scoreCounterLabel = new JLabel("Current Score: " + mainController.getGameState().getCurrentPoints());
+        scoreCounterLabel = new JLabel("Current Score: " + gameState.getCurrentPoints());
         scoreCounterLabel.setBounds(300,20,100,20);
 
         ratAnimatedSprite = SpriteUtil.createRatAnimatedSprite(ratSpriteSheetPathTable);
@@ -110,7 +111,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         spellButtonList.add(spellSlot4);
 
         initView();
-        mainController.subscribe(this);
+
     }
 
     private void initView()
@@ -168,7 +169,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         {
             ratEntry.getValue().draw(ratEntry.getKey());
         }
-        scoreCounterLabel.setText("Current Score: " + mainController.getGameState().getCurrentPoints());
+        scoreCounterLabel.setText("Current Score: " + gameState.getCurrentPoints());
         ratsToAdd.clear();
         ratsToDelete.clear();
     }
@@ -237,31 +238,6 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
             mainController.performAction(new UseSpellOnSlotAction(SpellSlotType.values()[spellButtonList.indexOf(e.getSource())]));
             System.out.println(spellButtonList.indexOf(e.getSource()));
         }
-//        switch(e.getActionCommand())
-//        {
-//            case "Leave":
-//                System.out.println("Leave Pressed");
-//                mainController.performAction(new SwitchScreenToAction(GameStateType.SILLY_CAT_GAME));
-//                break;
-//            case "Shop":
-//                System.out.println("Shop Pressed");
-//                mainController.performAction(new SwitchScreenToAction(GameStateType.SHOP));
-//                break;
-//            case "Fireball":
-//                System.out.println("Fireball Used");
-//                mainController.performAction(new UseSpellAction(SpellType.FIREBALL));
-//                break;
-//            case "Freeze":
-//                System.out.println("Freeze Used");
-//                mainController.performAction(new UseSpellAction(SpellType.FREEZE));
-//                break;
-//            case "Lightning":
-//                System.out.println("Lightning Used");
-//                mainController.performAction(new UseSpellAction(SpellType.LIGHTNING));
-//                break;
-//            default:
-//                break;
-//        }
     }
 
     @Override

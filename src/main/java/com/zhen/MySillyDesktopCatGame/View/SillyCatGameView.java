@@ -63,7 +63,6 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     {
         System.out.println("Constructor called");
         this.mainController = mainController;
-        this.gameState = mainController.getGameState();
         System.out.println("main controller returned " +this.gameState);
 
         menuButton = new JButton("Menu");

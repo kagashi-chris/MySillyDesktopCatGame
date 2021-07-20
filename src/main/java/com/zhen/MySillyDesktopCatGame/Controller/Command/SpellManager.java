@@ -1,17 +1,17 @@
-package com.zhen.MySillyDesktopCatGame.Controller;
+package com.zhen.MySillyDesktopCatGame.Controller.Command;
 
-import com.zhen.MySillyDesktopCatGame.Command.Command;
+import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 
 import java.util.Stack;
 
-public class SpellController {
+public class SpellManager {
 
     private Command[] spellCommand = new Command[4];
     Stack<Command> spellCommandHistoryStack = new Stack<>();
     private MainController mainController;
 
-    public SpellController(MainController mainController) {
+    public SpellManager(MainController mainController) {
         this.mainController = mainController;
     }
 
