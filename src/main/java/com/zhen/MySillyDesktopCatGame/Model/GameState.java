@@ -1,5 +1,6 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
+import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
@@ -19,6 +20,7 @@ public class GameState{
     private int currentPoints = 0;
     private Map<SpellType, Spell> spellTypeToSpellMap = new HashMap<>();
     private List<Observer> observerList = new ArrayList<>();
+    private Command[] spellCommands;
 
     public GameState(){
     }
@@ -26,6 +28,7 @@ public class GameState{
     public GameState(GameStateType gameStateType) {
         this.gameStateType = gameStateType;
         this.catList = new ArrayList<>();
+
         Cat cat = new Cat();
         catList.add(cat);
 
@@ -80,6 +83,14 @@ public class GameState{
 
     public Map<SpellType, Spell> getSpellTypeToSpellMap() {
         return spellTypeToSpellMap;
+    }
+
+    public Command[] getSpellCommands() {
+        return spellCommands;
+    }
+
+    public void setSpellCommands(Command[] spellCommands) {
+        this.spellCommands = spellCommands;
     }
 
     @Override

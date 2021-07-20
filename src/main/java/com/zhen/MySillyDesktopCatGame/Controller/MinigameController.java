@@ -1,8 +1,11 @@
 package com.zhen.MySillyDesktopCatGame.Controller;
 
+import com.zhen.MySillyDesktopCatGame.Action.BuyItemAction;
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.FireballSpellCommand;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.SpellManager;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
@@ -10,6 +13,7 @@ import com.zhen.MySillyDesktopCatGame.Model.Observer;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
+import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +26,14 @@ public class MinigameController{
     private int ratId = 0;
     private List<Rat> ratsToRemoveList = new ArrayList<>();
     private List<Observer> observerList = new ArrayList<>();
+    private SpellManager spellManager;
 
     public MinigameController(MainController mainController) {
         this.mainController = mainController;
         normalRatFactory = new NormalRatFactory();
         tankyRatFactory = new TankyRatFactory();
-
+        spellManager = new SpellManager();
+        mainController.getGameState().setSpellCommands(spellManager.getSpellCommand());
     }
 
     public void randomlyCreateRat()
@@ -122,12 +128,64 @@ public class MinigameController{
 
     private void UseUpSpell(SpellSlotType spellSlotType)
     {
-        int index = SpellSlotType.valueOf(spellSlotType.toString()).ordinal();
-        Command spell = mainController.getSpellController().getSpellCommand()[index];
-        if(spell != null)
-        {
-            spell.execute();
-        }
-        mainController.getSpellController().getSpellCommand()[index] = null;
+        spellManager.executeSpellCommand(spellSlotType);
     }
+
+    public void buyItem(BuyItemAction action)
+    {
+        System.out.println("Buying Item");
+        SpellType spellType = action.getSpellType();
+        switch (spellType)
+        {
+            case FIREBALL:
+                System.out.println("Trying to buy fireball");
+                if(checkUserHasPointsToBuyItem(spellType))
+                {
+                    SpellSlotType emptySpellSlotIndex = checkForEmptySpellSlot();
+                    if(emptySpellSlotIndex == null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        spellManager.setSpellCommand(checkForEmptySpellSlot(), new FireballSpellCommand(mainController.getGameState()));
+                        mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() - mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost());
+                    }
+                }
+                break;
+            case FREEZE:
+                break;
+            case LIGHTNING:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public boolean checkUserHasPointsToBuyItem(SpellType spellType)
+    {
+        int userPoint = mainController.getGameState().getCurrentPoints();
+        int spellCost = mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost();
+        if(userPoint >= spellCost)
+        {
+            System.out.println("Has Enough Points");
+            return true;
+        }
+        System.out.println("Dont Have Enough Points");
+        return false;
+    }
+
+    public SpellSlotType checkForEmptySpellSlot()
+    {
+        Command[] commandList = spellManager.getSpellCommand();
+        for(int i = 0; i < commandList.length; i++)
+        {
+            if(commandList[i] == null)
+            {
+                return SpellSlotType.values()[i];
+            }
+        }
+        return null;
+    }
+
 }

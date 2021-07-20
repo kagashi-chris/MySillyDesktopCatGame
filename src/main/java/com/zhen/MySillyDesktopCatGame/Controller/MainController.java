@@ -7,7 +7,6 @@ import com.zhen.MySillyDesktopCatGame.Action.FeedAction;
 import com.zhen.MySillyDesktopCatGame.Action.MakeHungryDebugAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
-import com.zhen.MySillyDesktopCatGame.Controller.Command.SpellManager;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.View.MainWindowView;
@@ -26,8 +25,6 @@ public class MainController implements Runnable{
     private SillyCatGameController sillyCatGameController;
     private MenuController menuController;
     private MinigameController minigameController;
-    private MiniGameShopController miniGameShopController;
-    private SpellManager spellManager;
     double interpolation = 0;
     final int TICKS_PER_SECOND = 25;
     final int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
@@ -44,8 +41,6 @@ public class MainController implements Runnable{
         menuController = new MenuController(this);
         sillyCatGameController = new SillyCatGameController(this);
         minigameController = new MinigameController(this);
-        miniGameShopController = new MiniGameShopController(this);
-        spellManager = new SpellManager(this);
         start();
     }
 
@@ -120,7 +115,7 @@ public class MainController implements Runnable{
         else if (action instanceof BuyItemAction)
         {
             System.out.println("Performing Action BuyItem");
-            miniGameShopController.buyItem((BuyItemAction) action);
+            minigameController.buyItem((BuyItemAction) action);
         }
         else if (action instanceof UseSpellOnSlotAction)
         {
@@ -175,9 +170,5 @@ public class MainController implements Runnable{
 
     public SillyCatGameController getSillyCatGameController() {
         return sillyCatGameController;
-    }
-
-    public SpellManager getSpellController() {
-        return spellManager;
     }
 }

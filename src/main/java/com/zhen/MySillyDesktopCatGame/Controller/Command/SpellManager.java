@@ -1,18 +1,12 @@
 package com.zhen.MySillyDesktopCatGame.Controller.Command;
 
-import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
-
-import java.util.Stack;
 
 public class SpellManager {
 
     private Command[] spellCommand = new Command[4];
-    Stack<Command> spellCommandHistoryStack = new Stack<>();
-    private MainController mainController;
 
-    public SpellManager(MainController mainController) {
-        this.mainController = mainController;
+    public SpellManager() {
     }
 
     public void setSpellCommand(SpellSlotType spellSlotType, Command command){
@@ -21,14 +15,12 @@ public class SpellManager {
 
     public void executeSpellCommand(SpellSlotType spellSlotType)
     {
+        if(spellCommand[spellSlotType.ordinal()] == null)
+        {
+            return;
+        }
         spellCommand[spellSlotType.ordinal()].execute();
-        spellCommandHistoryStack.push(spellCommand[spellSlotType.ordinal()]);
         spellCommand[spellSlotType.ordinal()] = null;
-    }
-
-    public void undoSpellCommand()
-    {
-
     }
 
     public Command[] getSpellCommand() {

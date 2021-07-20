@@ -70,7 +70,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         this.mainController = mainController;
         mainController.subscribe(this);
 
-        spellCommands = new Command[mainController.getSpellController().getSpellCommand().length];
+        spellCommands = gameState.getSpellCommands();
 
         quitMiniGameButton = new JButton("Leave");
         quitMiniGameButton.setBounds(20,20, 100,20);
@@ -140,10 +140,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     @Override
     public void tick() {
         List<Cat> catList = gameState.getCatList();
-        if(checkIfSpellSlotUpdated())
-        {
-            updateSpellSlots();
-        }
+        updateSpellSlots();
         for(Cat cat:catList)
         {
             catMiniGameAnimatedSprite.draw(catMiniGameLabel,cat);
@@ -174,34 +171,16 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         ratsToDelete.clear();
     }
 
-    private boolean checkIfSpellSlotUpdated()
-    {
-        Command[] tempSpellCommands = mainController.getSpellController().getSpellCommand();
-        boolean updated = false;
-        for(int i = 0; i < tempSpellCommands.length; i ++)
-        {
-            if(tempSpellCommands[i] != spellCommands[i])
-            {
-                spellCommands[i] = tempSpellCommands[i];
-                updated = true;
-            }
-        }
-        return updated;
-    }
-
     private void updateSpellSlots()
     {
-        System.out.println("Updating Spell Slots!");
         for(int i = 0; i < spellCommands.length; i++)
         {
             if(spellCommands[i] == null)
             {
-                System.out.println("index " + i + " is null");
                 spellButtonList.get(i).setText("");
             }
             else
             {
-                System.out.println("Changing Name To: " + spellCommands[i].getCommandName());
                 spellButtonList.get(i).setText(spellCommands[i].getCommandName());
             }
         }
