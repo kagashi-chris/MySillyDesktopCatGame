@@ -65,6 +65,13 @@ public class MinigameController{
 
     private void updateRat()
     {
+        for(Rat rat: ratsToRemoveList)
+        {
+            mainController.getGameState().getRatSet().remove(rat);
+            scorePoint();
+        }
+        ratsToRemoveList.clear();
+
         for(Rat rat: mainController.getGameState().getRatSet())
         {
             if(rat.getHp() <= 0)
@@ -72,12 +79,6 @@ public class MinigameController{
                 ratsToRemoveList.add(rat);
             }
         }
-        for(Rat rat: ratsToRemoveList)
-        {
-            mainController.getGameState().getRatSet().remove(rat);
-            scorePoint();
-        }
-        ratsToRemoveList.clear();
     }
 
     private void scorePoint()
