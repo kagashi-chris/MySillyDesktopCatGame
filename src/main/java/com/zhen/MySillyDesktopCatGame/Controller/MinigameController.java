@@ -6,6 +6,7 @@ import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.FireballSpellCommand;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.FreezeSpellCommand;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.LightningSpellCommand;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.SpellManager;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
@@ -172,6 +173,20 @@ public class MinigameController{
                 }
                 break;
             case LIGHTNING:
+                System.out.println("Trying to buy Lightning");
+                if(checkUserHasPointsToBuyItem(spellType))
+                {
+                    SpellSlotType emptySpellSlotIndex = checkForEmptySpellSlot();
+                    if(emptySpellSlotIndex == null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        spellManager.setSpellCommand(checkForEmptySpellSlot(), new LightningSpellCommand(mainController.getGameState()));
+                        mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() - mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost());
+                    }
+                }
                 break;
             default:
                 break;
