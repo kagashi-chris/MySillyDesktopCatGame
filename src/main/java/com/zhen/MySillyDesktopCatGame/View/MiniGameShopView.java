@@ -95,6 +95,11 @@ public class MiniGameShopView extends JPanel implements View, ActionListener {
                 mainController.performAction(new BuyItemAction(SpellType.FIREBALL));
                 break;
 
+            case "Freeze":
+                System.out.println("Buying Freeze");
+                mainController.performAction(new BuyItemAction(SpellType.FREEZE));
+                break;
+
             default:
                 break;
         }

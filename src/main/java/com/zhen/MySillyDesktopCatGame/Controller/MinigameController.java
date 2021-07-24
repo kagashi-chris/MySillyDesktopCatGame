@@ -5,6 +5,7 @@ import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.FireballSpellCommand;
+import com.zhen.MySillyDesktopCatGame.Controller.Command.FreezeSpellCommand;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.SpellManager;
 import com.zhen.MySillyDesktopCatGame.Factory.NormalRatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
@@ -155,6 +156,20 @@ public class MinigameController{
                 }
                 break;
             case FREEZE:
+                System.out.println("Trying to buy freeze");
+                if(checkUserHasPointsToBuyItem(spellType))
+                {
+                    SpellSlotType emptySpellSlotIndex = checkForEmptySpellSlot();
+                    if(emptySpellSlotIndex == null)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        spellManager.setSpellCommand(checkForEmptySpellSlot(), new FreezeSpellCommand(mainController.getGameState()));
+                        mainController.getGameState().setCurrentPoints(mainController.getGameState().getCurrentPoints() - mainController.getGameState().getSpellTypeToSpellMap().get(spellType).getCost());
+                    }
+                }
                 break;
             case LIGHTNING:
                 break;

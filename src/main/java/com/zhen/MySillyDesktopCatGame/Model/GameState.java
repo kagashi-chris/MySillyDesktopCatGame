@@ -17,7 +17,7 @@ public class GameState{
     private GameStateType gameStateType;
     private List<Cat> catList;
     private Set<Rat> ratSet = new HashSet<>();
-    private int currentPoints = 0;
+    private int currentPoints = 1000;
     private Map<SpellType, Spell> spellTypeToSpellMap = new HashMap<>();
     private List<Observer> observerList = new ArrayList<>();
     private Command[] spellCommands;
