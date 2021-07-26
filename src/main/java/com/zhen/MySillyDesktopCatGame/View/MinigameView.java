@@ -146,11 +146,14 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         }
         for(Rat rat: ratsToDelete)
         {
-            AnimatedSprite ratAnimatedSprite = ratToSpriteMap.get(rat);
-            ratToSpriteMap.get(rat).getjLabel().setVisible(false);
-            ratToSpriteMap.remove(rat);
-            spriteToRatMap.remove(ratAnimatedSprite);
-            this.remove(ratAnimatedSprite.getjLabel());
+            if(  ratToSpriteMap.get(rat).getjLabel() != null)
+            {
+                AnimatedSprite ratAnimatedSprite = ratToSpriteMap.get(rat);
+                ratToSpriteMap.get(rat).getjLabel().setVisible(false);
+                ratToSpriteMap.remove(rat);
+                spriteToRatMap.remove(ratAnimatedSprite);
+                this.remove(ratAnimatedSprite.getjLabel());
+            }
         }
 
         for(Map.Entry<Rat,AnimatedSprite> ratEntry : ratToSpriteMap.entrySet())
