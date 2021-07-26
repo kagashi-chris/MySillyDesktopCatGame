@@ -5,7 +5,6 @@ import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
-import com.zhen.MySillyDesktopCatGame.Model.Enemy;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
 import com.zhen.MySillyDesktopCatGame.Model.MinigameCat;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
@@ -214,7 +213,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     @Override
     public void mouseClicked(MouseEvent e) {
         Object source =  e.getSource();
-        if(source instanceof Enemy)
+        if(source instanceof AnimatedSprite)
         {
             Rat rat = spriteToRatMap.get((AnimatedSprite) source);
             mainController.performAction(new DamageRatAction(rat));
