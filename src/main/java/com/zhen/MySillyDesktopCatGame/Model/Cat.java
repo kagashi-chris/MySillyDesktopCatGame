@@ -1,40 +1,20 @@
 package com.zhen.MySillyDesktopCatGame.Model;
 
-import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 
 import java.time.LocalDateTime;
 
-public class Cat {
+public class Cat extends Animal{
 
     private int fullness;
     private int happiness;
-    private CatStateType catStateType;
-    private CatMiniGameStateType catMiniGameStateType;
     private LocalDateTime catLastUpdated;
-    private static Cat instance;
 
-    //cat fullness goes up to 100000 and starts at 50000. The reason for this is because I wanted the hunger to
-    //tick down by one every second.
-    public Cat() {
+    public Cat(int x, int y) {
+        super(CatStateType.IDLE_LEFT, x, y);
         fullness = 50000;
         happiness = 50000;
-        catStateType = CatStateType.IDLE_LEFT;
-        catMiniGameStateType = CatMiniGameStateType.IDLE;
         catLastUpdated = LocalDateTime.now();
-    }
-
-    public Cat(int fullness, int happiness) {
-        this.fullness = fullness;
-        this.happiness = happiness;
-    }
-    public static synchronized Cat getInstance()
-    {
-        if(instance == null)
-        {
-            instance = new Cat();
-        }
-        return instance;
     }
 
     public int getFullness() {
@@ -53,14 +33,6 @@ public class Cat {
         this.happiness = happiness;
     }
 
-    public CatStateType getCatStateType() {
-        return catStateType;
-    }
-
-    public void setCatStateType(CatStateType catStateType) {
-        this.catStateType = catStateType;
-    }
-
     public LocalDateTime getCatLastUpdated() {
         return catLastUpdated;
     }
@@ -69,20 +41,15 @@ public class Cat {
         this.catLastUpdated = catLastUpdated;
     }
 
-    public CatMiniGameStateType getCatMiniGameStateType() {
-        return catMiniGameStateType;
-    }
-
-    public void setCatMiniGameStateType(CatMiniGameStateType catMiniGameStateType) {
-        this.catMiniGameStateType = catMiniGameStateType;
-    }
 
     @Override
     public String toString() {
         return "Cat{" +
+                "x=" + x +
+                ", y=" + y +
+                ", animalStateType=" + animalStateType +
                 ", fullness=" + fullness +
                 ", happiness=" + happiness +
-                ", catStateType=" + catStateType +
                 ", catLastUpdated=" + catLastUpdated +
                 '}';
     }

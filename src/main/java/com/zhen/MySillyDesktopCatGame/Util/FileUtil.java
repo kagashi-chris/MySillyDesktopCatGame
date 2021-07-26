@@ -2,15 +2,16 @@ package com.zhen.MySillyDesktopCatGame.Util;
 
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileUtil {
 
@@ -38,7 +39,7 @@ public class FileUtil {
 
     public static Cat csvReader(String path)
     {
-        Cat cat = new Cat();
+        Cat cat = new Cat(150,150);
         String line = "";
         String[] catInfo;
         try {

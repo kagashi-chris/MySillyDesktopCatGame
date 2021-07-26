@@ -3,25 +3,24 @@ package com.zhen.MySillyDesktopCatGame.Model;
 import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
 import com.zhen.MySillyDesktopCatGame.Type.RatType;
 
-public abstract class Rat {
+public class Rat extends Animal implements Enemy {
 
     private int hp;
     private int speed;
-    private RatStateType ratStateType;
     private RatType ratType;
-    private int x,y;
     private int id;
     private boolean dead;
 
-
-    public Rat(RatType ratType, int hp, int speed, int x, int y, int id) {
-        this.ratType = ratType;
+    public Rat(int x, int y, int hp, int speed, RatType ratType, int id) {
+        super(RatStateType.RUNNING, x, y);
         this.hp = hp;
         this.speed = speed;
-        this.x = x;
-        this.y = y;
+        this.ratType = ratType;
+        if(ratType == RatType.TANKY)
+        {
+            hp+=5;
+        }
         this.id = id;
-        ratStateType = RatStateType.RUNNING;
     }
 
     public int getHp() {
@@ -40,36 +39,8 @@ public abstract class Rat {
         this.speed = speed;
     }
 
-    public RatStateType getRatStateType() {
-        return ratStateType;
-    }
-
-    public void setRatStateType(RatStateType ratStateType) {
-        this.ratStateType = ratStateType;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public RatType getRatType() {
-        return ratType;
-    }
-
-    public void setRatType(RatType ratType) {
-        this.ratType = ratType;
+    public boolean isDead() {
+        return dead;
     }
 
     public int getId() {
@@ -80,24 +51,17 @@ public abstract class Rat {
         this.id = id;
     }
 
-    public boolean isDead() {
-        return dead;
-    }
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
-    }
-
     @Override
     public String toString() {
         return "Rat{" +
-                "hp=" + hp +
-                ", speed=" + speed +
-                ", ratStateType=" + ratStateType +
-                ", ratType=" + ratType +
-                ", x=" + x +
+                "x=" + x +
                 ", y=" + y +
+                ", animalStateType=" + animalStateType +
+                ", hp=" + hp +
+                ", speed=" + speed +
+                ", ratType=" + ratType +
                 ", id=" + id +
+                ", dead=" + dead +
                 '}';
     }
 }

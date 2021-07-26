@@ -1,5 +1,5 @@
 package com.zhen.MySillyDesktopCatGame.Type;
 
-public enum CatMiniGameStateType {
+public enum CatMiniGameStateType implements AnimalStateType{
     IDLE,SHOOTING,DEAD
 }

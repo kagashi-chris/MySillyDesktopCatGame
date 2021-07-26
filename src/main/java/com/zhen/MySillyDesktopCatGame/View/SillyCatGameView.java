@@ -6,13 +6,12 @@ import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Controller.MainController;
 import com.zhen.MySillyDesktopCatGame.Model.Cat;
 import com.zhen.MySillyDesktopCatGame.Model.GameState;
+import com.zhen.MySillyDesktopCatGame.Type.AnimalStateType;
 import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Util.SpriteUtil;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -32,7 +31,6 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     private JButton debugHungryButton;
     private java.util.List<JButton> buttonList = new ArrayList<>();
 
-    private JLabel catLabel;
     private MainController mainController;
     private static SillyCatGameView instance;
 
@@ -42,9 +40,9 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     private final int CAT_DISPLAY_IMAGE_WIDTH = 128;
     private final int CAT_DISPLAY_IMAGE_HEIGHT = 128;
 
-    private CatAnimatedSprite catAnimatedSprite;
+    private AnimatedSprite catAnimatedSprite;
 
-    private static Map<CatStateType, SpriteUtil.AnimationData> catSpriteSheetPathTable  = new HashMap<>() {{
+    private static Map<AnimalStateType, SpriteUtil.AnimationData> catSpriteSheetPathTable  = new HashMap<>() {{
         put(CatStateType.EATING, new SpriteUtil.AnimationData("CatEat.png", 7,32,32,4));
         put(CatStateType.DYING, new SpriteUtil.AnimationData("CatDying.png", 2,32,32,4));
         put(CatStateType.DEAD, new SpriteUtil.AnimationData("CatDead.png", 1,32,32,4));
@@ -87,9 +85,10 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         buttonList.add(debugHungryButton);
         buttonList.add(menuButton);
 
-        catLabel = new JLabel(new ImageIcon());
-        catAnimatedSprite = SpriteUtil.createCatAnimatedSprite(catSpriteSheetPathTable);
-        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+//        catLabel = new JLabel(new ImageIcon());
+        catAnimatedSprite = SpriteUtil.createAnimatedSprite(catSpriteSheetPathTable);
+        catAnimatedSprite.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
+//        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
 
         JPanel miniGamePanel = new JPanel();
 
@@ -114,7 +113,7 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         this.add(feedButton);
         this.add(playButton);
         this.add(debugHungryButton);
-        this.add(catLabel);
+        this.add(catAnimatedSprite);
         this.setLayout(null);
     }
 
@@ -126,7 +125,8 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         List<Cat> catList = gameState.getCatList();
         for(Cat cat:catList)
         {
-            catAnimatedSprite.draw(catLabel,cat);
+            System.out.println("Drawing cat");
+            catAnimatedSprite.draw(cat);
         }
         selectedCat = catList.get(0);
         for (JButton button: buttonList)

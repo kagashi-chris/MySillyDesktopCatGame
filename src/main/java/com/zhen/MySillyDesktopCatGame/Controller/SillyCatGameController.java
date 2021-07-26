@@ -32,7 +32,7 @@ public class SillyCatGameController{
     {
         Cat cat = action.getCat();
         cat.setFullness(cat.getFullness()+30000);
-        cat.setCatStateType(CatStateType.EATING);
+        cat.setAnimalStateType(CatStateType.EATING);
         System.out.println(cat.getFullness());
         feedButtonPressed = true;
         eatingTimer = 6;
@@ -92,7 +92,7 @@ public class SillyCatGameController{
         CatBehaviorStateMachine.State catState = catBehaviorStateMachine.getCurrentState();
 
         //determine effects of new state
-        mainController.getGameState().getCatList().get(0).setCatStateType(catState.getCatStateType());
+        mainController.getGameState().getCatList().get(0).setAnimalStateType(catState.getCatStateType());
         resetButtons();
         if(catState.getCatStateType() == CatStateType.EATING)
         {
@@ -117,15 +117,15 @@ public class SillyCatGameController{
 
         if(currentHappiness < 0 || currentHunger < 0)
         {
-            cat.setCatStateType(CatStateType.DEAD);
+            cat.setAnimalStateType(CatStateType.DEAD);
         }
         else if(currentHappiness < 30000 || currentHunger < 30000)
         {
-            cat.setCatStateType(CatStateType.DYING);
+            cat.setAnimalStateType(CatStateType.DYING);
         }
         else
         {
-            cat.setCatStateType(CatStateType.IDLE_LEFT);
+            cat.setAnimalStateType(CatStateType.IDLE_LEFT);
         }
 
     }

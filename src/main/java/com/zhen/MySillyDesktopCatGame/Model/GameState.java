@@ -5,6 +5,7 @@ import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,8 +17,9 @@ public class GameState{
     private boolean buttonsDisabled;
     private GameStateType gameStateType;
     private List<Cat> catList;
+    private MinigameCat minigameCat;
     private Set<Rat> ratSet = new HashSet<>();
-    private int currentPoints = 1000;
+    private int currentPoints = 100;
     private Map<SpellType, Spell> spellTypeToSpellMap = new HashMap<>();
     private List<Observer> observerList = new ArrayList<>();
     private Command[] spellCommands;
@@ -29,7 +31,9 @@ public class GameState{
         this.gameStateType = gameStateType;
         this.catList = new ArrayList<>();
 
-        Cat cat = new Cat();
+        minigameCat = new MinigameCat(50,250);
+
+        Cat cat = new Cat(150,150);
         catList.add(cat);
 
         Spell fireball = new FireballSpell(10,15,150);
@@ -93,14 +97,25 @@ public class GameState{
         this.spellCommands = spellCommands;
     }
 
+    public MinigameCat getMinigameCat() {
+        return minigameCat;
+    }
+
+    public void setMinigameCat(MinigameCat minigameCat) {
+        this.minigameCat = minigameCat;
+    }
+
     @Override
     public String toString() {
         return "GameState{" +
                 "buttonsDisabled=" + buttonsDisabled +
                 ", gameStateType=" + gameStateType +
                 ", catList=" + catList +
+                ", minigameCat=" + minigameCat +
                 ", ratSet=" + ratSet +
                 ", currentPoints=" + currentPoints +
+                ", spellTypeToSpellMap=" + spellTypeToSpellMap +
+                ", spellCommands=" + Arrays.toString(spellCommands) +
                 '}';
     }
 }

@@ -1,5 +1,5 @@
 package com.zhen.MySillyDesktopCatGame.Type;
 
-public enum RatStateType {
+public enum RatStateType implements AnimalStateType{
     RUNNING, ATTACKING, DEAD
 }

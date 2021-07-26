@@ -1,11 +1,7 @@
 package com.zhen.MySillyDesktopCatGame.Util;
 
-import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
-import com.zhen.MySillyDesktopCatGame.Type.CatStateType;
-import com.zhen.MySillyDesktopCatGame.Type.RatStateType;
-import com.zhen.MySillyDesktopCatGame.View.CatAnimatedSprite;
-import com.zhen.MySillyDesktopCatGame.View.CatMiniGameAnimatedSprite;
-import com.zhen.MySillyDesktopCatGame.View.RatAnimatedSprite;
+import com.zhen.MySillyDesktopCatGame.Type.AnimalStateType;
+import com.zhen.MySillyDesktopCatGame.View.AnimatedSprite;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -51,12 +47,13 @@ public class SpriteUtil {
 
         return imageIcons;
     }
-    public static CatMiniGameAnimatedSprite createCatMiniGameAnimatedSprite(Map<CatMiniGameStateType, AnimationData> catSpriteSheetPathTable)
+
+    public static AnimatedSprite createAnimatedSprite(Map<AnimalStateType, AnimationData> spriteSheetPathTable)
     {
-        Map<CatMiniGameStateType, Icon[]> catAnimationTable = new HashMap<>();
-        for(Map.Entry<CatMiniGameStateType, AnimationData> entry: catSpriteSheetPathTable.entrySet())
+        Map<AnimalStateType, Icon[]> animationTable = new HashMap<>();
+        for(Map.Entry<AnimalStateType, AnimationData> entry: spriteSheetPathTable.entrySet())
         {
-            catAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
+            animationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
                     entry.getValue().getSpriteSheetPath(),
                     entry.getValue().getNumAnimationFrames(),
                     entry.getValue().getPixelWidth(),
@@ -64,42 +61,8 @@ public class SpriteUtil {
                     entry.getValue().getScaleFactor()
             ));
         }
-        CatMiniGameAnimatedSprite catMiniGameAnimatedSprite = new CatMiniGameAnimatedSprite(catAnimationTable);
-        return catMiniGameAnimatedSprite;
-    }
-
-    public static CatAnimatedSprite createCatAnimatedSprite(Map<CatStateType, AnimationData> catSpriteSheetPathTable)
-    {
-        Map<CatStateType, Icon[]> catAnimationTable = new HashMap<>();
-        for(Map.Entry<CatStateType, AnimationData> entry: catSpriteSheetPathTable.entrySet())
-        {
-            catAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
-                entry.getValue().getSpriteSheetPath(),
-                entry.getValue().getNumAnimationFrames(),
-                entry.getValue().getPixelWidth(),
-                entry.getValue().getPixelHeight(),
-                entry.getValue().getScaleFactor()
-            ));
-        }
-        CatAnimatedSprite catAnimatedSprite = new CatAnimatedSprite(catAnimationTable);
-        return catAnimatedSprite;
-    }
-
-    public static RatAnimatedSprite createRatAnimatedSprite(Map<RatStateType, AnimationData> ratSpriteSheetPathTable)
-    {
-        Map<RatStateType, Icon[]> ratAnimationTable = new HashMap<>();
-        for(Map.Entry<RatStateType, AnimationData> entry: ratSpriteSheetPathTable.entrySet())
-        {
-            ratAnimationTable.put(entry.getKey(), getImageIconsFromSpriteSheet(
-                    entry.getValue().getSpriteSheetPath(),
-                    entry.getValue().getNumAnimationFrames(),
-                    entry.getValue().getPixelWidth(),
-                    entry.getValue().getPixelHeight(),
-                    entry.getValue().getScaleFactor()
-            ));
-        }
-        RatAnimatedSprite ratAnimatedSprite = new RatAnimatedSprite(ratAnimationTable);
-        return ratAnimatedSprite;
+        AnimatedSprite animatedSprite = new AnimatedSprite(animationTable);
+        return animatedSprite;
     }
 
     public static class AnimationData{
