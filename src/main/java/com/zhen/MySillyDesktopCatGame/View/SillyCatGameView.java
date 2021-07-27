@@ -57,6 +57,8 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     //certain buttons are pressed. The animation of the cat changes on a timer. Every one second the timer will call
     //the action listener and check the CatStateType again. If it remains the same then it moves onto the next frame
     //of the animation, else it resets the frame count back to 0 and play the request animation.
+
+    //whenever a button is pressed mainController.performAction is done base on what the action is.
     private SillyCatGameView(MainController mainController)
     {
         this.mainController = mainController;
@@ -83,17 +85,12 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         buttonList.add(debugHungryButton);
         buttonList.add(menuButton);
 
-//        catLabel = new JLabel(new ImageIcon());
         catAnimatedSprite = SpriteUtil.createAnimatedSprite(catSpriteSheetPathTable);
         catAnimatedSprite.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
-//        catLabel.setBounds(150,150,CAT_DISPLAY_IMAGE_WIDTH,CAT_DISPLAY_IMAGE_HEIGHT);
-
-        JPanel miniGamePanel = new JPanel();
 
         initView();
         mainController.subscribe(this);
     }
-
 
     public static synchronized SillyCatGameView getInstance(MainController mainController)
     {

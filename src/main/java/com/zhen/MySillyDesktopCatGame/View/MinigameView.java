@@ -103,7 +103,6 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         spellButtonList.add(spellSlot4);
 
         initView();
-
     }
 
     private void initView()

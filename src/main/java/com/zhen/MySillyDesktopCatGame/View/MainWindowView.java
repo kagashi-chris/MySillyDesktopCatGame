@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.CardLayout;
 
-//TODO remove timer from this class and update the tick in mainController
 public class MainWindowView extends JFrame implements View{
 
     private MenuView menuView;
