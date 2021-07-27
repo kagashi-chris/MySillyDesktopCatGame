@@ -59,9 +59,7 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
     //of the animation, else it resets the frame count back to 0 and play the request animation.
     private SillyCatGameView(MainController mainController)
     {
-        System.out.println("Constructor called");
         this.mainController = mainController;
-        System.out.println("main controller returned " +this.gameState);
 
         menuButton = new JButton("Menu");
         menuButton.setBounds(20,20, 100,20);
@@ -125,7 +123,6 @@ public class SillyCatGameView extends JPanel implements ActionListener, View{
         List<Cat> catList = gameState.getCatList();
         for(Cat cat:catList)
         {
-            System.out.println("Drawing cat");
             catAnimatedSprite.draw(cat);
         }
         selectedCat = catList.get(0);

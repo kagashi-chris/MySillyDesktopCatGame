@@ -31,6 +31,18 @@ public class SpriteUtil {
         return imageIcon;
     }
 
+    public static BufferedImage getImage(String filePath)
+    {
+        BufferedImage image;
+        try {
+            image = ImageIO.read(SpriteUtil.class.getClassLoader().getResource(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return image;
+    }
+
     private static Icon[] getImageIconsFromSpriteSheet(String spriteSheetPath, int numAnimationFrames, int pixelWidth, int pixelHeight, int scaleFactor)
     {
         ImageIcon[] imageIcons = new ImageIcon[numAnimationFrames];
