@@ -18,7 +18,7 @@ public class AnimatedSprite extends JLabel {
     }
 
     public void draw(Animal animal) {
-        this.setBounds(animal.getX(), animal.getY(), 128,128);
+        this.setBounds(animal.getX(), animal.getY(), 160,160);
         if(lastDrawnAnimation == animal.getAnimalStateType())
         {
             incrementAndWrap(animationTable.get(animal.getAnimalStateType()));

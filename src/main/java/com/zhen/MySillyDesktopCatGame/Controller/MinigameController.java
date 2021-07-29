@@ -2,6 +2,7 @@ package com.zhen.MySillyDesktopCatGame.Controller;
 
 import com.zhen.MySillyDesktopCatGame.Action.BuyItemAction;
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
+import com.zhen.MySillyDesktopCatGame.Action.MiniGameCatAttackAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.FireballSpellCommand;
@@ -13,6 +14,7 @@ import com.zhen.MySillyDesktopCatGame.Factory.RatFactory;
 import com.zhen.MySillyDesktopCatGame.Factory.TankyRatFactory;
 import com.zhen.MySillyDesktopCatGame.Model.Observer;
 import com.zhen.MySillyDesktopCatGame.Model.Rat;
+import com.zhen.MySillyDesktopCatGame.Type.CatMiniGameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.GameStateType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellSlotType;
 import com.zhen.MySillyDesktopCatGame.Type.SpellType;
@@ -29,6 +31,7 @@ public class MinigameController{
     private List<Rat> ratsToRemoveList = new ArrayList<>();
     private List<Observer> observerList = new ArrayList<>();
     private SpellManager spellManager;
+    private int minigameCatShootTick = 0;
 
     public MinigameController(MainController mainController) {
         this.mainController = mainController;
@@ -95,12 +98,33 @@ public class MinigameController{
             updateRat();
             randomlyCreateRat();
             animateRat();
+            changeCatBackToIdle();
+
+        }
+    }
+
+    private void changeCatBackToIdle()
+    {
+        if(minigameCatShootTick >= 0)
+        {
+            minigameCatShootTick--;
+        }
+        else
+        {
+            mainController.getGameState().getMinigameCat().setAnimalStateType(CatMiniGameStateType.IDLE);
         }
     }
 
     public void handleDamageRat(DamageRatAction damageRatAction)
     {
         damageRatAction.getRat().setHp(damageRatAction.getRat().getHp()-10);
+    }
+
+
+    public void handleMinigameCatAttack(MiniGameCatAttackAction miniGameCatAttackAction)
+    {
+        miniGameCatAttackAction.getMinigameCat().setAnimalStateType(CatMiniGameStateType.SHOOTING);
+        minigameCatShootTick = 3;
     }
 
     public void handleSpellSlotUse(UseSpellOnSlotAction useSpellOnSlotAction)

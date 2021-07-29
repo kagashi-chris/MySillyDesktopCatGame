@@ -1,6 +1,7 @@
 package com.zhen.MySillyDesktopCatGame.View;
 
 import com.zhen.MySillyDesktopCatGame.Action.DamageRatAction;
+import com.zhen.MySillyDesktopCatGame.Action.MiniGameCatAttackAction;
 import com.zhen.MySillyDesktopCatGame.Action.SwitchScreenToAction;
 import com.zhen.MySillyDesktopCatGame.Action.UseSpellOnSlotAction;
 import com.zhen.MySillyDesktopCatGame.Controller.Command.Command;
@@ -57,6 +58,8 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
     private JButton spellSlot3;
     private JButton spellSlot4;
 
+    private MinigameCat minigameCat;
+
     private static Map<AnimalStateType, SpriteUtil.AnimationData> catMiniGameSpriteSheetPathTable = new HashMap<>(){{
         put(CatMiniGameStateType.IDLE, new SpriteUtil.AnimationData("CatGunIdle.png",1,50,50,3));
         put(CatMiniGameStateType.SHOOTING, new SpriteUtil.AnimationData("CatGunFire.png",1,50,50,3));
@@ -102,6 +105,8 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         spellButtonList.add(spellSlot3);
         spellButtonList.add(spellSlot4);
 
+        minigameCat = gameState.getMinigameCat();
+
         initView();
     }
 
@@ -130,7 +135,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
 
     @Override
     public void tick() {
-        MinigameCat minigameCat = gameState.getMinigameCat();
+        minigameCat = gameState.getMinigameCat();
         updateSpellSlots();
 
         catMiniGameAnimatedSprite.draw(minigameCat);
@@ -145,7 +150,7 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
         }
         for(Rat rat: ratsToDelete)
         {
-            if(  ratToSpriteMap.get(rat).getjLabel() != null)
+            if(ratToSpriteMap.get(rat).getjLabel() != null)
             {
                 AnimatedSprite ratAnimatedSprite = ratToSpriteMap.get(rat);
                 ratToSpriteMap.get(rat).getjLabel().setVisible(false);
@@ -214,7 +219,9 @@ public class MinigameView extends JPanel implements View, ActionListener, MouseL
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        mainController.performAction(new MiniGameCatAttackAction(minigameCat));
         Object source =  e.getSource();
+
         if(source instanceof AnimatedSprite)
         {
             Rat rat = spriteToRatMap.get((AnimatedSprite) source);
